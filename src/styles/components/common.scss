@@ -1,0 +1,16 @@
+.main-container {
+  margin-top: 80px;
+  width: calc(100% - 65px);
+  box-sizing: border-box;
+  margin-left: 65px;
+  padding-left: 20px;
+  &.phone {
+    width: 100%;
+    margin-left: 0;
+    padding-left: 0;
+  }
+  padding-bottom: 100px;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  height: calc(100vh - 80px);
+}

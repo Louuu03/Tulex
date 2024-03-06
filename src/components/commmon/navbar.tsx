@@ -99,7 +99,7 @@ const Navbar: React.FC = () => {
   }, [isLargerThan768]);
 
   return (
-    <Flex
+    router.pathname!=='/app/login'?<Flex
       direction={isLargerThan768 ? 'column' : 'row'}
       position='fixed'
       bottom={isLargerThan768 ? 'initial' : '-1px'}
@@ -122,6 +122,7 @@ const Navbar: React.FC = () => {
         <NavItem key={index} {...item} isCurrent={isCurrent} />
       ))}
     </Flex>
+    :''
   );
 };
 
