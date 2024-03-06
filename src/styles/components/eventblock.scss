@@ -1,0 +1,42 @@
+// event.scss
+.eventblock {
+  padding: 10px 20px;
+  border-radius: 10px;
+  color: black;
+  margin-top: 20px;
+  max-width: 430px;
+  box-sizing: border-box;
+  position: relative;
+
+  .content-container {
+    justify-content: space-between;
+    background-color: #9ce6f4;
+    border: 2px solid black;
+    padding: 5px 10px;
+    border-radius: 10px;
+    z-index: 10;
+    .right-container {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      font-size: 14px;
+      justify-content: flex-end;
+    }
+  }
+  .language-tag {
+    background-color: #000;
+    color: #fff;
+    border-top-right-radius: 10px;
+    border-bottom-left-radius: 10px;
+    padding-bottom: 20px;
+    padding-top: 2px;
+  }
+
+  .stat-tag {
+    padding-top: 20px;
+    padding-bottom: 3px;
+    background-color: gold;
+    color: #000;
+    z-index: 0;
+  }
+}
