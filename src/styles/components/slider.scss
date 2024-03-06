@@ -1,0 +1,33 @@
+.slider-container {
+  box-sizing: border-box;
+  width: 100%;
+  margin: 10px 30px;
+
+  .splide__slide {
+    max-width: 310px;
+    width: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .more-container {
+    .background {
+      background: linear-gradient(
+        to right,
+        #ff9966,
+        #ff5e62
+      ); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+      height: 150px;
+      width: 300px;
+      border-radius: 10px;
+      margin: 10px 20px;
+    }
+  }
+  .splide__pagination {
+    bottom: -1.5em;
+    .splide__pagination__page.is-active {
+      background-color: $primary-yellow;
+    }
+  }
+}
