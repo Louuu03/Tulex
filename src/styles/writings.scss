@@ -1,0 +1,25 @@
+.writing-container {
+  .guide-box {
+    width: 150px;
+    height: 60px;
+    border: 2px solid black;
+    border-radius: 5px;
+    margin: 10px;
+    text-align: center;
+    line-height: 55px;
+    color: white;
+    font-weight: 600;
+    &:hover {
+      cursor: pointer;
+    }
+  }
+  .title {
+    font-size: 18px;
+    font-weight: 600;
+    width: 100%;
+    text-align: left;
+    padding-left: 26px;
+    margin-top: 10px;
+    margin-bottom: -20px;
+  }
+}
