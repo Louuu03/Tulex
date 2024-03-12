@@ -41,12 +41,13 @@ module.exports = async event => {
   // If validation is successful, proceed with database operation
   try {
     const { db } = await connectToDatabase();
-    const result = await db.collection('articles').insertOne(value); // Use validated value
+    db.collection('articles').insertOne(value); // Use validated value
     return {
       statusCode: 201,
-      body: JSON.stringify(result.ops[0]),
+      body:'Document inserted successfully',
     };
   } catch (dbError) {
+    console.error('Database Error:', dbError.message);
     return { statusCode: 500, body: 'Internal Server Error' };
   }
 };

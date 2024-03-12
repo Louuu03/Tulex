@@ -7,13 +7,14 @@ const { connectToDatabase } = require('/opt/nodejs/mongodbClient');
 const userValidationSchema = Joi.object({
   plan: Joi.number().valid(0, 1, 2).required(),
   birthday: Joi.date().required(),
-  categories: Joi.object({
+  categories: Joi.array()
+  .items(Joi.object({
     _id: Joi.string().required(),
     streak: Joi.number().required(),
-  }).required(),
+  })).optional(),
   country: Joi.number().required(),
   gender: Joi.number().valid(0, 1, 2, 3).required(),
-  img: Joi.string().optional(),
+  img: Joi.string().allow('').required(),
   language: Joi.number().valid(0, 1, 2).required(),
   learning: Joi.object({
     writing: Joi.array()

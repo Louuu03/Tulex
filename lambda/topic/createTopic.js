@@ -21,7 +21,7 @@ const topicValidationSchema = Joi.object({
   level: Joi.number().required(),
   subscribed: Joi.array()
     .items(Joi.string().pattern(new RegExp('^[0-9a-fA-F]{24}$')))
-    .required(),
+    .optional(),
 });
 
 module.exports = async event => {
@@ -41,12 +41,13 @@ module.exports = async event => {
   // If validation is successful, proceed with database operation
   try {
     const { db } = await connectToDatabase();
-    const result = await db.collection('topics').insertOne(value); // Use validated value
+    db.collection('topics').insertOne(value); // Use validated value
     return {
       statusCode: 201,
-      body: JSON.stringify(result.ops[0]),
+      body: 'Document inserted successfully',
     };
   } catch (dbError) {
+    console.error('Database Error:', dbError.message);
     return { statusCode: 500, body: 'Internal Server Error' };
   }
 };
