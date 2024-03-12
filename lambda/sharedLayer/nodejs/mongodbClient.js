@@ -2,10 +2,7 @@ const { MongoClient } = require('mongodb');
 
 let uri = process.env.MONGODB_URI;
 let dbName = process.env.DB_NAME;
-let client = new MongoClient(uri, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-});
+let client = new MongoClient(uri);
 let dbConnection;
 
 const connectToDatabase = async () => {
