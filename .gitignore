@@ -38,3 +38,13 @@ next-env.d.ts
 #prettier
 .prettierrc
 .prettierignore
+
+#lambda
+lambda/sharedLayer/nodejs/node_modules
+lambda/.env
+lambda/expressTest.js
+lambda/template.yaml
+lambda/node_modules
+lambda/schemas.js
+lambda/FakeData.js
+lambda/.aws-sam
