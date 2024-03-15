@@ -8,10 +8,13 @@ const userValidationSchema = Joi.object({
   plan: Joi.number().valid(0, 1, 2).required(),
   birthday: Joi.date().required(),
   categories: Joi.array()
-  .items(Joi.object({
-    _id: Joi.string().required(),
-    streak: Joi.number().required(),
-  })).optional(),
+    .items(
+      Joi.object({
+        _id: Joi.string().required(),
+        streak: Joi.number().required(),
+      })
+    )
+    .optional(),
   country: Joi.number().required(),
   gender: Joi.number().valid(0, 1, 2, 3).required(),
   img: Joi.string().allow('').required(),

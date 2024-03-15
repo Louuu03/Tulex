@@ -44,7 +44,7 @@ module.exports = async event => {
     db.collection('articles').insertOne(value); // Use validated value
     return {
       statusCode: 201,
-      body:'Document inserted successfully',
+      body: 'Document inserted successfully',
     };
   } catch (dbError) {
     console.error('Database Error:', dbError.message);
