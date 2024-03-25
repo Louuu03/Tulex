@@ -1,6 +1,16 @@
 //set tokens in cookies and check if user existed.
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { connectToDatabase } from '../../../../lib/mongodbClient';
+import Joi from 'joi';
+
+
+const callbackSchema = Joi.object({
+  idToken: Joi.string().required(),
+  accessToken: Joi.string().required(),
+  refreshToken: Joi.string().required(),
+  userId: Joi.string().required()
+  }).required();
+
 
 export default async function handler(
   req: NextApiRequest,
@@ -12,8 +22,13 @@ export default async function handler(
   }
   // Parse the tokens sent from the frontend
   let isNewUser = false;
-  const { idToken, accessToken, refreshToken, userId } = req.body;
-
+  const bodyValidation = callbackSchema.validate(req.body);
+  if (bodyValidation.error) {
+    return res.status(400).json({
+      message: `Validation Error: ${bodyValidation.error.details.map(x => x.message).join(', ')}`,
+    });
+  }
+  const { idToken, accessToken, refreshToken, userId } = bodyValidation.value;
   // Check if the user existed
 
   const { db } = await connectToDatabase();
