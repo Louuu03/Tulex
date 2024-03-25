@@ -84,12 +84,10 @@ export default async (req, res) => {
           }
         );
         addToCategory &&
-          res
-            .status(200)
-            .json({
-              message: 'Topics Add successfully',
-              id: updateResult.insertedId,
-            });
+          res.status(200).json({
+            message: 'Topics Add successfully',
+            id: updateResult.insertedId,
+          });
       }
     } catch (error) {
       console.log(error);
@@ -116,18 +114,16 @@ export default async (req, res) => {
           .status(404)
           .json({ message: 'Topic not found or no changes made' });
       }
-      await db
-        .collection('categories')
-        .updateOne(
-          { _id: new ObjectId(updateData.category_id) },
-          {
-            $set: {
-              'topics.$[elem].name': updateData.name,
-              'topics.$[elem].create_time': updateData.create_time,
-            },
+      await db.collection('categories').updateOne(
+        { _id: new ObjectId(updateData.category_id) },
+        {
+          $set: {
+            'topics.$[elem].name': updateData.name,
+            'topics.$[elem].create_time': updateData.create_time,
           },
-          { arrayFilters: [{ 'elem.topic_id': new ObjectId(_id) }] }
-        );
+        },
+        { arrayFilters: [{ 'elem.topic_id': new ObjectId(_id) }] }
+      );
       res.status(200).json({ message: 'Topic updated successfully' });
     } catch (error) {
       res.status(500).json({ error: error.message });

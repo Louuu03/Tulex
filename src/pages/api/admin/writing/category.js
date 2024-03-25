@@ -63,12 +63,10 @@ export default async (req, res) => {
       if (!updateResult.acknowledged) {
         return res.status(404).json({ message: 'Add Failed', updateResult });
       }
-      res
-        .status(200)
-        .json({
-          message: 'Category Add successfully',
-          id: updateResult.insertedId,
-        });
+      res.status(200).json({
+        message: 'Category Add successfully',
+        id: updateResult.insertedId,
+      });
     } catch (error) {
       res.status(500).json({ error: error.message });
     }
