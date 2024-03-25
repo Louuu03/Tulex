@@ -1,6 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { connectToDatabase } from '../../../lib/mongodbClient';
 import Joi from 'joi';
+import { ObjectId } from 'mongodb';
 
 const basicUserSchema = Joi.object({
   name: Joi.string().required(),
@@ -28,8 +29,8 @@ export default async function handler(
 
   if (req.method === 'GET') {
     const { db } = await connectToDatabase();
-    const user = await db.collection('users').findOne({ _id: userId });
-    if (user.birthday) {
+    const user = await db.collection('users').findOne({ _id: userId as unknown as ObjectId  });
+    if (user&&user.birthday) {
       const cookieOptions = {
         secure: 'development',
       };
@@ -68,12 +69,12 @@ export default async function handler(
       if (req.query.method === 'basic') {
         result = await db
           .collection('users')
-          .updateOne({ _id: userId }, { $set: updates });
+          .updateOne({ _id: userId  as unknown as ObjectId }, { $set: updates });
       } else {
         result = await db
           .collection('users')
           .updateOne(
-            { _id: userId },
+            { _id: userId as unknown as ObjectId },
             { $set: { learning: { writing: updates, speaking: updates } } }
           );
       }

@@ -51,7 +51,7 @@ export default async function handler(
   const { db } = await connectToDatabase();
   //GET atopics
   if (req.method == 'GET') {
-    const topicId = req.query.id;
+    const topicId = req.query.id as string;
     try {
       //Get the topic
       const topic = await db
@@ -151,7 +151,7 @@ export default async function handler(
   if (req.method == 'PUT') {
     const method = req.query.method;
     if (method === 'subscribe') {
-      const topicId = req.query.id;
+      const topicId = req.query.id as string;
       // Validate body, assuming you have validation in place
       const { topic } = req.body;
       try {
@@ -227,7 +227,7 @@ export default async function handler(
         });
       }
     } else if (method === 'save') {
-      const articleId = req.query.id;
+      const articleId = req.query.id as string;
       try {
         const bodyValidation = saveArticleSchema.validate(req.body);
         if (bodyValidation.error) {
@@ -259,7 +259,7 @@ export default async function handler(
         });
       }
     } else if (method === 'submit') {
-      const articleId = req.query.id;
+      const articleId = req.query.id as string;
       try {
         const bodyValidation = submitSchema.validate(req.body);
         if (bodyValidation.error) {

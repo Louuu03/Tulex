@@ -13,10 +13,11 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import FullPageLoader from '@/components/layout/fullloader';
 import { DateTime } from 'luxon';
+import { Article, Topic } from '@/utils/common-type';
 
 const WritingPage: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
-  const [data, setData] = useState<{} | null>(null);
+  const [data, setData] = useState<{topics: Topic[] | any, articles: Article} | null>(null);
   const [isLargerThan768] = useMediaQuery('(min-width: 768px)');
   const [hasPicLoaded, setHasPicLoaded] = useState(false);
   const router = useRouter();

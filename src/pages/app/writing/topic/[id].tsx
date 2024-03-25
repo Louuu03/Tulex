@@ -31,13 +31,13 @@ import { DateTime } from 'luxon';
 import { Article, Topic } from '@/utils/common-type';
 
 interface DataType {
-  article: Article;
-  topic: Topic;
-  userId: string;
+  article?: Article|any;
+  topic?: Topic;
+  userId?: string;
 }
 
 interface AllEventsPageProps {
-  eventId: string;
+  eventId: {id:string};
 }
 
 export const getServerSideProps: GetServerSideProps = async context => {
@@ -55,7 +55,7 @@ const TopicPage: NextPage<AllEventsPageProps> = ({ eventId }) => {
   const [isSubscribed, setIsSubscribed] = useState<boolean>(false);
   const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
   const [isPast, setIsPast] = useState<boolean>(false);
-  const [isOpen, setIsOpen] = useState<string | false>(false);
+  const [isOpen, setIsOpen] = useState<boolean | string>(false);
   const [data, setData] = useState<DataType>();
   const [tabIndex, setTabIndex] = useState<number>(0);
   const [isLoading, setIsLoading] = useState<
@@ -74,7 +74,7 @@ const TopicPage: NextPage<AllEventsPageProps> = ({ eventId }) => {
     //Res 200: already subscribed
     //Res 202: subscribed and added a new article
     //Res 203: unsubscribed
-    axios
+    data&&axios
       .put(`/api/writing/topic?id=${eventId.id}&method=subscribe`, {
         status: isSubscribed ? 1 : 0,
         topic: data?.topic,
@@ -122,7 +122,7 @@ const TopicPage: NextPage<AllEventsPageProps> = ({ eventId }) => {
   };
   const onSubmit = () => {
     setIsLoading('submit');
-    axios
+    data?.article&&axios
       .put(`/api/writing/topic?id=${data?.article._id}&method=submit`, {
         content: data?.article.content,
       })

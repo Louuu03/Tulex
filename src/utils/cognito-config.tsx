@@ -20,10 +20,10 @@ interface TokenResponse {
 }
 // Set up your Cognito User Pool data
 const poolData: PoolData = {
-  UserPoolId: process.env.NEXT_PUBLIC_USER_POOL_ID,
-  ClientId: process.env.NEXT_PUBLIC_CLIENT_ID,
-  RedirectUri: process.env.NEXT_PUBLIC_AUTH_REDIRECT_URI,
-  Domain: process.env.NEXT_PUBLIC_POOL_DOMAIN,
+  UserPoolId: process.env.NEXT_PUBLIC_USER_POOL_ID as string,
+  ClientId: process.env.NEXT_PUBLIC_CLIENT_ID as string,
+  RedirectUri: process.env.NEXT_PUBLIC_AUTH_REDIRECT_URI as string,
+  Domain: process.env.NEXT_PUBLIC_POOL_DOMAIN as string,
 };
 
 const userPool = new CognitoUserPool(poolData);

@@ -13,7 +13,7 @@ const AllSubmissionPage: NextPage = () => {
   const [isLargerThan768] = useMediaQuery('(min-width: 768px)');
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [data, setData] = useState<{
-    articles: Article[];
+    articles: Article[] | any;
     userId: string;
   } | null>(null);
   const [originalData, setOriginalData] = useState<{
@@ -44,7 +44,7 @@ const AllSubmissionPage: NextPage = () => {
   return isLoading ? (
     <FullPageLoader />
   ) : (
-    data && (
+    data&& originalData && (
       <VStack align='center' className='allsubmission-container'>
         <VStack className={`main-container ${isLargerThan768 ? '' : 'phone'}`}>
           {/* <FiltersComponent visibleFilters={['level', 'language']} /> */}

@@ -24,15 +24,15 @@ export default async function handler(
       status: 0,
       user_id: userId,
     });
-    const articles: Article[] =
-      (await articleCursor.toArray()) as unknown as Article[];
+    const articles =
+      (await articleCursor.toArray());
 
     if (articles.length === 0) {
       return res
         .status(200)
         .json({ message: 'No topics found', articles: [], userId });
     }
-    let newData = articles;
+    let newData = articles as any;
     newData.forEach(article => {
       newData.endtime = DateTime.fromJSDate(article.endtime).toISO();
     });

@@ -1,8 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { connectToDatabase } from '../../../lib/mongodbClient';
-import { ObjectId } from 'mongodb';
 import { DateTime } from 'luxon';
-import { Topic } from '@/utils/common-type';
 
 
 export default async function handler(
@@ -20,7 +18,7 @@ export default async function handler(
         $gt: new Date(),
       },
     });
-    const topics: Topic[] = await topicsCursor.toArray();
+    const topics = await topicsCursor.toArray();
 
     if (topics.length === 0) {
       return res.status(200).json({ message: 'No topics found' });

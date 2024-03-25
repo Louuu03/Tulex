@@ -440,7 +440,7 @@ const LandingPage: React.FC = () => {
                 Where Every Word’s a Win.{' '}
               </Text>
               <Text maxW={isLargerThan768?'500px':'350px'} mt={'10px'} fontSize={'18px'} textAlign={isLargerThan768?'left':'center'}>
-              Slide into Tulex's exciting language adventure! We blend humor with expert tips for a lively learning experience in speaking and writing. Weekly themes spark your creativity, making the process as delightful as the mastery. Embark on a fun, educational journey where laughter enhances learning.
+              Slide into Tulex&apos;s exciting language adventure! We blend humor with expert tips for a lively learning experience in speaking and writing. Weekly themes spark your creativity, making the process as delightful as the mastery. Embark on a fun, educational journey where laughter enhances learning.
               </Text>
             </Box>
            {isLargerThan768&& <HStack wrap={'wrap'} w={isLargerThan1300?'520px' :"260px"} h={isLargerThan1300?'360px' :"520px"}>
@@ -502,7 +502,7 @@ const LandingPage: React.FC = () => {
             </VStack>
 
             <Text fontSize={isLargerThan768?'18px':'16px'} textAlign={isLargerThan768?'left':'center'}>
-            Learning languages through writing is like crafting a message to a crush: you pause, choose your words, and aim for the grammar to spark. It's a kind of practical magic that enhances memory, clarifies complex grammar, and deepens your vocabulary love affair. Plus, witnessing your progress is like capturing the evolution of your linguistic allure. In essence, writing hones your skills and transforms you into a slick grammar expert.
+            Learning languages through writing is like crafting a message to a crush: you pause, choose your words, and aim for the grammar to spark. It&apos;s a kind of practical magic that enhances memory, clarifies complex grammar, and deepens your vocabulary love affair. Plus, witnessing your progress is like capturing the evolution of your linguistic allure. In essence, writing hones your skills and transforms you into a slick grammar expert.
             </Text>
           </VStack>
           <HStack mt='50px' width={'70%'} justify={isLargerThan768?'space-between':'center'} wrap={isLargerThan768?'nowrap':'wrap'}>
@@ -551,7 +551,7 @@ const LandingPage: React.FC = () => {
                     display={'none'}
 
                   >
-Elevate your language skills with Tulex's Themed Writing Challenges. From Grammar to IELTS Prep, our weekly prompts are tailored to your learning objectives, offering both challenge and clarity in expression.
+Elevate your language skills with Tulex&apos;s Themed Writing Challenges. From Grammar to IELTS Prep, our weekly prompts are tailored to your learning objectives, offering both challenge and clarity in expression.
                   </Text>
                   
                 </Center>
@@ -644,7 +644,7 @@ Elevate your language skills with Tulex's Themed Writing Challenges. From Gramma
                 Speaking
               </Text>
               <Text fontSize={'20px'} textAlign='left' width={'70%'}>
-              Transform your language practice with Tulex into a fun, engaging experience. We provide a wealth of materials to keep conversations lively, from conversation starters to key language structures. It's like your guidebook for exciting language adventures. With us, every conversation is a chance to learn, laugh, and progress towards fluency, making sure you're always primed for smooth chatting.
+              Transform your language practice with Tulex into a fun, engaging experience. We provide a wealth of materials to keep conversations lively, from conversation starters to key language structures. It&apos;s like your guidebook for exciting language adventures. With us, every conversation is a chance to learn, laugh, and progress towards fluency, making sure you&apos;re always primed for smooth chatting.
               </Text>
               <HStack mt={'60px'} width={isLargerThan1300?'70%':'90%'} justify={isLargerThan768?'space-between':'center'} wrap={isLargerThan768?'nowrap':'wrap'}>
                 <VStack w={isLargerThan768?'33%':'90%'}  padding={'10px'} >
@@ -712,7 +712,7 @@ Elevate your language skills with Tulex's Themed Writing Challenges. From Gramma
                     display={isLargerThan768?'block':'none'}
 
                   >
-                    Equip yourself with our custom materials, featuring conversation starters and sentence structures. It's like donning linguistic armor for the banter battle.
+                    Equip yourself with our custom materials, featuring conversation starters and sentence structures. It&apos;s like donning linguistic armor for the banter battle.
                   </Text>
                 </VStack>
                 <VStack w={isLargerThan768?'33%':'90%'}  padding={'10px'}>
@@ -1029,9 +1029,9 @@ Elevate your language skills with Tulex's Themed Writing Challenges. From Gramma
             </Text>
               <Text color={'black'} fontWeight={'400'} textAlign={'center'} maxW={"350px"}>
                 Got questions or feedback? We’re all ears! Drop us a line, and
-                let's make your language journey unforgettable together.
+                let&apos;s make your language journey unforgettable together.
               </Text>
-              <Link href="mailto:tulex.lang@gmail.com?subject=Inquiry&body=Hello, I'm interested in learning more about your services.">
+              <Link href="mailto:tulex.lang@gmail.com?subject=Inquiry&body=Hello, I&apos;m interested in learning more about your services.">
                 <Text
                   color='black'
                   textDecor={'underline'}

@@ -47,7 +47,7 @@ export default async function handler(
         .status(200)
         .json({ message: 'No topics found', topics: [], category });
     }
-    let newTopics = [];
+    let newTopics:Topic[] = [];
     topics.forEach(topic => {
       topic.create_time = DateTime.fromJSDate(topic.create_time).toISO();
       topic.endtime = DateTime.fromJSDate(topic.endtime).toISO();

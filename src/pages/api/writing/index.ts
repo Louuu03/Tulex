@@ -1,7 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { connectToDatabase } from '../../../../lib/mongodbClient';
 import { DateTime } from 'luxon';
-import { Topic } from '@/utils/common-type';
 
 export default async function handler(
   req: NextApiRequest,
@@ -19,7 +18,7 @@ export default async function handler(
         $gt: new Date(),
       },
     });
-    const topics: Topic[] = await topicsCursor.toArray();
+    const topics= await topicsCursor.toArray();
     const articles = await db
       .collection('articles')
       .find({ user_id: userId, status: 0 })

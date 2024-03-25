@@ -13,11 +13,12 @@ const AllDraftsPage: NextPage = () => {
   const [isLargerThan768] = useMediaQuery('(min-width: 768px)');
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [data, setData] = useState<{
-    articles: Article[];
+    articles: Article[] | any;
+    userId: string;
   } | null>(null);
   const [originalData, setOriginalData] = useState<{
     articles: Article[];
-  }>(null);
+  }|null>(null);
 
   useEffect(() => {
     setIsLoading(true);
@@ -40,7 +41,7 @@ const AllDraftsPage: NextPage = () => {
   }, []);
   return isLoading ? (
     <FullPageLoader />
-  ) : (
+  ) : (data&& originalData &&
     <VStack align='center' className='alldrafts-container'>
       <VStack className={`main-container ${isLargerThan768 ? '' : 'phone'}`}>
         {/* <FiltersComponent visibleFilters={['level', 'language']} /> */}

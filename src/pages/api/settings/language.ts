@@ -1,6 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { connectToDatabase } from '../../../../lib/mongodbClient';
 import Joi from 'joi';
+import { ObjectId } from 'mongodb';
 
 const basicUserSchema = Joi.object({
   writing: Joi.array().min(1),
@@ -21,7 +22,7 @@ export default async function handler(
   if (req.method === 'GET') {
     try {
       const { db } = await connectToDatabase();
-      const user = await db.collection('users').findOne({ _id: userId });
+      const user = await db.collection('users').findOne({ _id: userId  as unknown as ObjectId });
 
       return res
         .status(203)
@@ -52,7 +53,7 @@ export default async function handler(
     try {
       let result = await db
         .collection('users')
-        .updateOne({ _id: userId }, { $set: { learning: updates } });
+        .updateOne({ _id: userId as unknown as ObjectId }, { $set: { learning: updates } });
 
       if (result.matchedCount === 0) {
         return res.status(404).json({ message: 'User not found', userId });

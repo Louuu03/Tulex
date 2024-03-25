@@ -4,6 +4,7 @@ import { Box, Flex, Text, Tag, HStack, VStack } from '@chakra-ui/react';
 import { useRouter } from 'next/navigation';
 import en from '../../i18n/en.json';
 import { find } from 'lodash';
+import { ObjectId } from 'mongodb';
 
 interface EventProps {
   category_name?: string;
@@ -15,7 +16,7 @@ interface EventProps {
   statTag?: string;
   isSmall?: boolean;
   isSubscribed?: boolean;
-  _id: string | number;
+  _id: string | number | ObjectId;
   isSingle?: boolean;
   clickable?: boolean;
   isTag?: boolean;

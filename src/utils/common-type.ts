@@ -97,7 +97,7 @@ interface Topic {
   name: string;
   create_time: Date;
   description: string;
-  endtime: Date;
+  endtime: string;
   steps: Step[];
   category_id: ObjectId;
   category_name: string;
@@ -136,14 +136,15 @@ interface Article {
   category_id: ObjectId;
   topic_id: ObjectId;
   content: string;
-  last_save: Date;
-  create_time: Date;
+  last_save: Date | string;
+  create_time: Date | string;
   language: string;
   category_name: string;
   name: string;
-  endtime: Date;
+  endtime: string;
   feedback: Feedback;
   level: number;
+  status: number;
 }
 interface Feedback {
     rating: number;

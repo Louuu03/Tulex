@@ -2,15 +2,15 @@ import React, { useEffect, useState } from 'react';
 import { HStack, Select, useMediaQuery } from '@chakra-ui/react';
 import en from '../../i18n/en.json';
 import { cloneDeep, filter, orderBy } from 'lodash';
-import { Category, Topic } from '@/utils/common-type';
+import { Article, Category, Topic } from '@/utils/common-type';
 
 interface FiltersComponentProps {
-  data: Category[] | Topic[];
+  data: Category[] | Topic[] | Article[] | null;
   setData: React.Dispatch<React.SetStateAction<Category[]>>;
   visibleFilters: Array<
     'level' | 'language' | 'status' | 'subscription' | 'sort'
   >;
-  userId: string;
+  userId?: string;
   type: string; // Currently just "category", but can be extended
 }
 /**
@@ -29,11 +29,11 @@ const FiltersComponent: React.FC<FiltersComponentProps> = ({
   userId,
   type,
 }) => {
-  const [selectedLevel, setSelectedLevel] = useState<number>(-1);
-  const [selectedLanguage, setSelectedLanguage] = useState<string>('');
-  const [selectedStatus, setSelectedStatus] = useState<number>(0);
-  const [selectedSubscription, setSelectedSubscription] = useState<number>(-1);
-  const [selectedSort, setSelectedSort] = useState<number>(0);
+  const [selectedLevel, setSelectedLevel] = useState<any>(-1);
+  const [selectedLanguage, setSelectedLanguage] = useState<any>('');
+  const [selectedStatus, setSelectedStatus] = useState<any>(0);
+  const [selectedSubscription, setSelectedSubscription] = useState<any>(-1);
+  const [selectedSort, setSelectedSort] = useState<any>(0);
 
   // Fake data for the filters
   const levelOptions = en.Level;
@@ -47,7 +47,7 @@ const FiltersComponent: React.FC<FiltersComponentProps> = ({
   const [isLargerThan768] = useMediaQuery('(min-width: 768px)');
 
   useEffect(() => {
-    let newData = cloneDeep(data);
+    let newData:any = cloneDeep(data);
     if (
       type === 'topic' &&
       selectedLevel.length > 0 &&
@@ -112,7 +112,7 @@ const FiltersComponent: React.FC<FiltersComponentProps> = ({
 
   const renderSelect = (
     label: string,
-    options: { name: string; value: number }[],
+    options: { name: string; value: number|string }[],
     selectedValue: string,
     onChange: React.Dispatch<React.SetStateAction<string>>
   ) => (

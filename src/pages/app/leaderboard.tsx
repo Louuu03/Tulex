@@ -1,5 +1,3 @@
-import HeaderComponent from '@/components/commmon/header';
-import Navbar from '@/components/commmon/navbar';
 import { Text, VStack, useMediaQuery } from '@chakra-ui/react';
 import React from 'react';
 

@@ -29,7 +29,7 @@ const CallbackPage = () => {
   const [verifyCode, setVerifyCode] = useState<string>('');
   const [canResend, setCanResend] = useState<boolean | number>(true);
   const [timeoutId, setTimeoutId] = useState<NodeJS.Timeout | null>(null);
-  const [decodeData, setDecodeData] = useState<{ email: string; sub: string }>({
+  const [decodeData, setDecodeData] = useState<{ email: string; sub: string }|any>({
     email: '',
     sub: '',
   });
@@ -143,7 +143,7 @@ const CallbackPage = () => {
               accessToken: access_token,
               refreshToken: refresh_token,
             });
-            const decoded = jwt.decode(id_token);
+            const decoded:any = jwt.decode(id_token);
             setDecodeData(decoded);
             //If the email is verified
             if (decoded.email_verified) {

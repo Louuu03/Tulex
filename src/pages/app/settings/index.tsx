@@ -15,7 +15,7 @@ import {
   useToast,
 } from '@chakra-ui/react';
 import axios from 'axios';
-import { isEmpty } from 'lodash';
+import { isEmpty, isString } from 'lodash';
 import { useRouter } from 'next/router';
 import React, { useState } from 'react';
 
@@ -129,7 +129,7 @@ const SettingPage: React.FC = () => {
           </ModalBody>
 
           <ModalFooter>
-            <Button colorScheme='blue' mr={3} onClick={onsubmit(isOpen)}>
+            <Button colorScheme='blue' mr={3} onClick={()=>{isString(isOpen)&&onsubmit(isOpen)}}>
               {isOpen === 'suggestion' ? 'Send' : 'Yes'}
             </Button>
             <Button onClick={onClose}> Close </Button>

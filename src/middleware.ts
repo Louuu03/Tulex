@@ -8,9 +8,9 @@ export const middleware = async (req: NextRequest, next: Function) => {
   let idToken = req.cookies.get('idToken')?.value;
   let accessToken = req.cookies.get('accessToken')?.value;
   let refreshToken = req.cookies.get('refreshToken')?.value;
-  let userId = req.cookies.get('userId')?.value;
-  let isNewUser = req.cookies.get('isNewUser')?.value;
-  let resetHeaders = [];
+  let userId :string | (() => string)= req.cookies.get('userId')?.value as string;
+  let isNewUser:boolean |string = req.cookies.get('isNewUser')?.value as string;
+  let resetHeaders:string[] = [];
   const res = NextResponse.next();
 
   // set headers
@@ -93,7 +93,7 @@ export const middleware = async (req: NextRequest, next: Function) => {
           accessToken = newTokens.access_token;
           idToken = newTokens.id_token;
           const decoded = jwt.decode(idToken);
-          userId = decoded ? decoded.sub : null; // Assuming 'sub' is your user identifier
+          userId =  decoded?.sub as string; // Assuming 'sub' is your user identifier
           resetHeaders.push('idToken', 'accessToken', 'userId', 'isNewUser');
         } else {
           // If no refreshToken, redirect to login
@@ -103,7 +103,7 @@ export const middleware = async (req: NextRequest, next: Function) => {
 
       if (!userId && idToken) {
         const decoded = jwt.decode(idToken);
-        userId = decoded ? decoded.sub : null; // Assuming 'sub' is your user identifier
+        userId = decoded?.sub as string; // Assuming 'sub' is your user identifier
         resetHeaders.push('userId', 'isNewUser');
       }
 
@@ -152,7 +152,7 @@ export const middleware = async (req: NextRequest, next: Function) => {
           accessToken = newTokens.access_token;
           idToken = newTokens.id_token;
           const decoded = jwt.decode(idToken);
-          userId = decoded ? decoded.sub : null; // Assuming 'sub' is your user identifier
+          userId = decoded?.sub as string; // Assuming 'sub' is your user identifier
           resetHeaders.push('idToken', 'accessToken', 'userId', 'isNewUser');
           setCookies(resetHeaders);
         } else {
@@ -174,7 +174,7 @@ export const middleware = async (req: NextRequest, next: Function) => {
           accessToken = newTokens.access_token;
           idToken = newTokens.id_token;
           const decoded = jwt.decode(idToken);
-          userId = decoded ? decoded.sub : null; // Assuming 'sub' is your user identifier
+          userId = decoded?.sub as string; // Assuming 'sub' is your user identifier
           resetHeaders.push('idToken', 'accessToken', 'userId', 'isNewUser');
         } else {
           // If no refreshToken, redirect to login
@@ -184,7 +184,7 @@ export const middleware = async (req: NextRequest, next: Function) => {
 
       if (!userId && idToken) {
         const decoded = jwt.decode(idToken);
-        userId = decoded ? decoded.sub : null; // Assuming 'sub' is your user identifier
+        userId = decoded?.sub as string; // Assuming 'sub' is your user identifier
         resetHeaders.push('userId', 'isNewUser');
         isNewUser = true;
       }

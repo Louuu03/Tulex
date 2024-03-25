@@ -20,7 +20,7 @@ interface DescriptionProps {
   };
 }
 
-const Description: React.FC<DescriptionProps> = ({ data }) => {
+const Description: React.FC<DescriptionProps|any> = ({ data }) => {
   return (
     <VStack w={'100%'} align={'flex-start'}>
       <Text textAlign={'justify'}>{data.description}</Text>

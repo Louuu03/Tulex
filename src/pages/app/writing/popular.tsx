@@ -12,7 +12,7 @@ const PopularPage: NextPage = () => {
   const [isLargerThan768] = useMediaQuery('(min-width: 768px)');
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [data, setData] = useState<{
-    topics: Topic[];
+    topics: Topic[] |any;
     userId: string;
   } | null>(null);
   const [originalData, setOriginalData] = useState<{
@@ -42,14 +42,14 @@ const PopularPage: NextPage = () => {
   return isLoading ? (
     <FullPageLoader />
   ) : (
-    data && (
+    data && originalData && (
       <VStack align='center' className='alldrafts-container'>
         <VStack className={`main-container ${isLargerThan768 ? '' : 'phone'}`}>
           <FiltersComponent
             type={'topic'}
             userId={data.userId}
-            data={originalData.topics}
-            setData={v => setData({ ...data, topics: v })}
+            data={originalData.topics }
+            setData={v => setData({ ...data, topics: v  })}
             visibleFilters={['level', 'language']}
           />
           <Flex

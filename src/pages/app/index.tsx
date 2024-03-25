@@ -22,7 +22,7 @@ const HomePage: React.FC = () => {
   const [hasPicHotLoaded, setHasPicHotLoaded] = useState(false);
   const [data, setData] = useState<{
     topics: Topic[];
-    hotTopic: Topic[] | null;
+    hotTopic: Topic | null;
   } | null>(null);
   const router = useRouter();
 
@@ -95,7 +95,7 @@ const HomePage: React.FC = () => {
                 zIndex={100}
                 style={{ display: hasPicNewLoaded ? 'block' : 'none' }}
               >
-                What's new
+                What&apos;s new
               </Text>
             </Skeleton>
           </Box>

@@ -11,7 +11,7 @@ export default async function handler(
     try {
       const categoryId = new ObjectId(req.body.category_id); // Convert to ObjectId
       const isSubscribed = req.body.isSubscribed; // Assuming this is a boolean
-      const userId = req.cookies.userId; // Convert to ObjectId
+      const userId = req.cookies.userId as string; // Convert to ObjectId
 
       const { db } = await connectToDatabase();
 
@@ -29,11 +29,11 @@ export default async function handler(
       // Update the user's categories array
       const updateUser = isSubscribed
         ? await db.collection('users').updateOne(
-            { _id: userId },
+            { _id: userId as unknown as ObjectId },
             { $pull: { categories: new ObjectId(categoryId) } } // Remove category from user's categories array
           )
         : await db.collection('users').updateOne(
-            { _id: userId },
+            { _id: userId as unknown as ObjectId },
             { $addToSet: { categories: new ObjectId(categoryId) } } // Add category to user's categories array
           );
 
@@ -49,7 +49,7 @@ export default async function handler(
       const userId = req.cookies.userId;
       const { db } = await connectToDatabase();
       const CategoryCursor = await db.collection('categories').find({});
-      const category: Category[] = await CategoryCursor.toArray();
+      const category: Category[] = await CategoryCursor.toArray() as Category[];
       if (category.length === 0) {
         return res.status(200).json({ message: 'No category found' });
       } else {

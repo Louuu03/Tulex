@@ -43,9 +43,9 @@ import { Category, Topic } from '@/utils/common-type';
 
 interface CategoryFormProps {
   categoryData: Category;
-  setCategoryData: React.Dispatch<React.SetStateAction<Category>>;
+  setCategoryData: React.Dispatch<React.SetStateAction<Category>>;  
 }
-const initialCategoryData: Category = {
+const initialCategoryData: Category|any = {
   name: '',
   short: '',
   long: '',
@@ -54,7 +54,7 @@ const initialCategoryData: Category = {
   create_time: DateTime.now().toFormat('yyyy-MM-dd'),
 };
 
-const initialTopicData: Topic = {
+const initialTopicData: Topic |any = {
   name: '',
   create_time: DateTime.now().toFormat('yyyy-MM-dd'),
   description: '',
@@ -72,7 +72,7 @@ interface TopicFormProps {
   setTopicData: React.Dispatch<React.SetStateAction<Topic>>;
 }
 
-const CategoryForm: React.FC<CategoryFormProps> = ({
+const CategoryForm: React.FC<CategoryFormProps | any> = ({
   categoryData,
   onClose,
   isCategoryOpen,
@@ -83,9 +83,9 @@ const CategoryForm: React.FC<CategoryFormProps> = ({
   const [data, setData] = useState<Category>(categoryData);
   const [isDelete, setIsDelete] = useState<boolean>(false);
   const toast = useToast();
-  const lang = [];
+  const lang:string[] = [];
   data.language.forEach(l => {
-    lang.push(en.abbLang[l].name);
+    lang.push(en.abbLang[l]?.name);
   });
   const onSubmit = () => {
     let newData = { ...data };
@@ -177,8 +177,8 @@ const CategoryForm: React.FC<CategoryFormProps> = ({
         <Input
           type='date'
           name='create_time'
-          defaultValue={data.create_time}
-          onChange={e => setData({ ...data, create_time: e.target.value })}
+          defaultValue={data.create_time as unknown as string}
+          onChange={e => setData({ ...data, create_time: e.target.value as unknown as Date })}
         />
       </FormControl>
       <FormControl isRequired mb={4}>
@@ -206,7 +206,7 @@ const CategoryForm: React.FC<CategoryFormProps> = ({
           name='status'
           value={data.status}
           onChange={e => {
-            setData({ ...data, status: e.target.value });
+            setData({ ...data, status: e.target.value as unknown as number });
           }}
         >
           {en.status.map(status => (
@@ -222,7 +222,7 @@ const CategoryForm: React.FC<CategoryFormProps> = ({
           colorScheme='green'
           defaultValue={data.language}
           onChange={e => {
-            setData({ ...data, language: e });
+            setData({ ...data, language: e as unknown as string[] });
           }}
         >
           <Stack direction='column'>
@@ -259,7 +259,7 @@ const CategoryForm: React.FC<CategoryFormProps> = ({
     </Box>
   );
 };
-const TopicForm: React.FC<TopicFormProps> = ({
+const TopicForm: React.FC<TopicFormProps|any> = ({
   categoryData,
   topicData,
   onClose,
@@ -269,12 +269,12 @@ const TopicForm: React.FC<TopicFormProps> = ({
   setNewData,
 }) => {
   const toast = useToast();
-  const [data, setData] = useState<Topic>(topicData);
+  const [data, setData] = useState<Topic|any>(topicData);
   const [categoryValue, setCategoryValue] = useState<
     { name: string; id: string }[]
   >([]);
   const [langOption, setLangOption] = useState<
-    { name: string; value: number }[]
+    { name: string; value: number }[]|any
   >([]);
   const [isDelete, setIsDelete] = useState<boolean>(false);
 
@@ -312,13 +312,13 @@ const TopicForm: React.FC<TopicFormProps> = ({
     }
   };
   const changeCategory = v => {
-    let newOptions = [];
+    let newOptions:{name:string, value:string}[] = [];
     let categoryName;
     categoryData.map(category => {
       category._id === v && (categoryName = category.name);
       category._id === v &&
         category.language.forEach(l => {
-          newOptions.push({ name: en.options.language[l].name, value: l });
+          newOptions.push({ name: en.options.language[l].name, value: l as string });
         });
     });
     setLangOption(newOptions);
@@ -423,10 +423,10 @@ const TopicForm: React.FC<TopicFormProps> = ({
   };
 
   useEffect(() => {
-    let newOptions = [];
-    let categoryOptions = [];
+    let newOptions:{name:string, value:string}[] = [];
+    let categoryOptions: {name:string, id:string}[] = [];
     categoryData[0].language.forEach(l => {
-      newOptions.push({ name: en.options.language[l].name, value: l });
+      newOptions.push({ name: en.options.language[l].name, value: l as string });
     });
     categoryData.map(category => {
       categoryOptions.push({ name: category.name, id: category._id });
@@ -600,11 +600,11 @@ const TopicForm: React.FC<TopicFormProps> = ({
   );
 };
 
-const CategoryPage: React.FC = ({ categoryData, setIsOpen, setData }) => {
+const CategoryPage: React.FC<any> = ({ categoryData, setIsOpen, setData }) => {
   return (
     <Accordion allowToggle={true} w={'100%'}>
       {categoryData.map((category, idx) => {
-        let lang = [];
+        let lang:string[] = [];
         category.language.forEach(l => {
           lang.push(en.abbLang[l].name);
         });
@@ -664,7 +664,7 @@ const CategoryPage: React.FC = ({ categoryData, setIsOpen, setData }) => {
   );
 };
 
-const TopicPage: React.FC = ({ topicData, setIsOpen, setData }) => {
+const TopicPage: React.FC<any> = ({ topicData, setIsOpen, setData }) => {
   return (
     <Accordion allowToggle={true} w={'100%'}>
       {topicData.map((topic, idx) => {
@@ -758,15 +758,15 @@ const AdminWritingPage: React.FC = () => {
   const [isTopicOpen, setIsTopicOpen] = useState<false | 'AI' | 'Add' | 'Edit'>(
     false
   );
-  const [categoryData, setCategoryData] = useState<Category[] | null>(null);
-  const [topicData, setTopicData] = useState<Topic[] | null>(null);
+  const [categoryData, setCategoryData] = useState<Category[] | any>(null);
+  const [topicData, setTopicData] = useState<Topic[] | any>(null);
   const [openData, setOpenData] = useState<Category | Topic | null>(
     null
   );
   const [originalData, setOriginalData] = useState<{
     topics: Topic[] | null;
     categories: Category[] | null;
-  }>(null);
+  }|null>(null);
 
   const router = useRouter();
 
@@ -781,11 +781,11 @@ const AdminWritingPage: React.FC = () => {
           // Not the object we're looking for, return it unchanged
           return item;
         }
-      );
+      )||[];
       mode === 'add' && newData.push(value);
       type === 'category' ? setCategoryData(newData) : setTopicData(newData);
     } else {
-      let newData = [];
+      let newData:any[] = [];
       (type === 'category' ? categoryData : topicData)?.map(item => {
         if (item._id !== value._id) {
           return newData.push(item);
@@ -804,7 +804,7 @@ const AdminWritingPage: React.FC = () => {
   };
 
   useEffect(() => {
-    let Datas = {};
+    let Datas:{categories:Category[], topics:Topic[]}|any = {};
     axios
       .get('/api/admin/writing/category')
       .then(res => {
@@ -865,7 +865,7 @@ const AdminWritingPage: React.FC = () => {
                     type={'category'}
                     data={originalData.categories}
                     setData={v => setCategoryData(v)}
-                    visibleFilters={[, 'status', 'language']}
+                    visibleFilters={[ 'status', 'language']}
                   />
                   <HStack>
                     <Button
@@ -896,7 +896,7 @@ const AdminWritingPage: React.FC = () => {
                   <FiltersComponent
                     type={'topic'}
                     data={originalData.topics}
-                    setData={v => setTopicData(v)}
+                    setData={v => setTopicData(v as unknown as Topic[])}
                     visibleFilters={['status', 'level', 'language', 'sort']}
                   />
                   <HStack>

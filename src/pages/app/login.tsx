@@ -75,7 +75,7 @@ const LoginPage: React.FC = () => {
             idToken:idToken.jwtToken,
             accessToken:accessToken.jwtToken,
             refreshToken:refreshToken.token,
-            userId:decoded.sub,
+            userId:decoded?.sub,
           })
           .then(response => {
             return response.status == 201

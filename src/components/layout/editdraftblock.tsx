@@ -8,7 +8,6 @@ import {
   VStack,
   useToast,
 } from '@chakra-ui/react';
-import { ObjectId } from 'mongodb';
 import axios from 'axios';
 import { DateTime } from 'luxon';
 import { Article } from '@/utils/common-type';
@@ -17,7 +16,7 @@ interface EditDraftBlockProps {
   isSubmitted?: boolean;
   article: Article;
   setIsOpen: () => void;
-  setArticle: (content: string) => void;
+  setArticle: (content: Article) => void;
 }
 
 const EditDraftBlock: React.FC<EditDraftBlockProps> = ({
@@ -133,10 +132,12 @@ const EditDraftBlock: React.FC<EditDraftBlockProps> = ({
 
   //Get Local Storage to content
   useEffect(() => {
-    let savedContent = localStorage.getItem('articleContent_' + article._id);
+    let savedContent:any = localStorage.getItem('articleContent_' + article._id);
     savedContent && (savedContent = JSON.parse(savedContent));
+    let newArticle=article
+    newArticle.last_save=DateTime.fromISO(article.last_save).toLocal().toFormat('yyyy-MM-dd')
     if (savedContent) {
-      setArticle({ ...article, content: savedContent.content });
+      setArticle({ ...newArticle, content: savedContent.content });
       setContent(savedContent.content);
     } else {
       setContent(article.content);
@@ -153,7 +154,7 @@ const EditDraftBlock: React.FC<EditDraftBlockProps> = ({
           fontSize={'14px'}
         >
           <Text>{isSubmitted ? 'Submission:' : 'Last Saved:'}</Text>
-          <Text>{article.last_save}</Text>
+          <Text>{article.last_save as string}</Text>
         </VStack>
         {!isSubmitted && (
           <HStack mb={2} justifyContent={'flex-end'}>
