@@ -309,7 +309,11 @@ const LoginPage: React.FC = () => {
           >
             Sign up
           </Button>
-          <Link textAlign='center'>Log in as Guest</Link>
+          <Link textAlign='center' onClick={()=>{
+            setEmail('tulex.guest0@gmail.com');
+            setPassword('Abcd1234');
+            handleLogin();
+          }}>Log in as Guest</Link>
           {!isLargerThan768 && (
             <VStack minW={'300px'} padding={'20px'}>
               <FacebookLoginButton size='40px' onClick={handleFacebookLogin} />

@@ -383,6 +383,12 @@ const LandingPage: React.FC = () => {
             >
               Where Languages Flow Smoothly
             </Text>
+           {isLargerThan768&& <Box>
+              <Text onClick={()=>router.push('/app/login')}fontSize={isLargerThan930?'20px':'18px'} textDecor={'underline'}>
+                 Peek into our app as a guest
+              </Text>
+             
+              </Box>}
             <Box
               width='100px'
               height='100px'
@@ -394,7 +400,14 @@ const LandingPage: React.FC = () => {
               right={isLargerThan768?'':'30px'}
               zIndex={1}
             ></Box>
+            {!isLargerThan768&& <Box position={'absolute'} bottom={'-300px'} left={'20px'}>
+              <Text onClick={()=>router.push('/app/login')} fontSize={'15px'} textDecor={'underline'}>
+                 Peek into our app as a guest
+              </Text>
+             
+              </Box>}
           </VStack>
+          
         </Box>
 
         <VStack>
