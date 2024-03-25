@@ -1,4 +1,3 @@
-// pages/login.tsx
 import FiltersComponent from '@/components/layout/filter';
 import {
   Button,
@@ -8,7 +7,6 @@ import {
   Tab,
   TabPanels,
   TabPanel,
-  Flex,
   HStack,
   Modal,
   ModalOverlay,
@@ -25,238 +23,284 @@ import {
   useToast,
   IconButton,
   Text,
+  Accordion,
+  AccordionItem,
+  AccordionButton,
+  AccordionIcon,
+  AccordionPanel,
+  CheckboxGroup,
+  Stack,
+  Checkbox,
 } from '@chakra-ui/react';
-import { on } from 'events';
-import { isEmpty } from 'lodash';
+import { isEmpty, isString, set } from 'lodash';
 import { useRouter } from 'next/router';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { AiOutlinePlus, AiOutlineMinus } from 'react-icons/ai';
+import en from '../../../i18n/en.json';
+import axios from 'axios';
+import { DateTime } from 'luxon';
+import { Category, Topic } from '@/utils/common-type';
 
-interface CategoryData {
-  name: string;
-  short: string;
-  long: string;
-  status: 'active' | 'disactive';
-  language: 'french' | 'english';
-  create_time: string;
-}
 interface CategoryFormProps {
-  isEditable: boolean;
-  setIsEditable: React.Dispatch<React.SetStateAction<boolean>>;
-  categoryData: CategoryData;
-  setCategoryData: React.Dispatch<React.SetStateAction<CategoryData>>;
+  categoryData: Category;
+  setCategoryData: React.Dispatch<React.SetStateAction<Category>>;
 }
-const initialCategoryData: CategoryData = {
+const initialCategoryData: Category = {
   name: '',
   short: '',
   long: '',
-  status: 'active',
-  language: 'english',
-  create_time: new Date().toISOString().substring(0, 10),
+  status: 0,
+  language: [],
+  create_time: DateTime.now().toFormat('yyyy-MM-dd'),
 };
 
-interface Step {
-  name: string;
-  details: string;
-}
-
-interface TopicData {
-  name: string;
-  create_time: string;
-  description: string;
-  endtime: string;
-  steps: Step[];
-  category: string;
-  example: string[];
-  language: 'English' | 'French';
-  level: 'A1' | 'A2' | 'B1' | 'B2' | 'C1' | 'C2';
-}
-
-const initialTopicData: TopicData = {
+const initialTopicData: Topic = {
   name: '',
-  create_time: new Date().toISOString().substring(0, 10),
+  create_time: DateTime.now().toFormat('yyyy-MM-dd'),
   description: '',
-  endtime: new Date().toISOString().substring(0, 10),
+  endtime: DateTime.now().toFormat('yyyy-MM-dd'),
   steps: [{ name: '', details: '' }],
-  category: '',
-  example: [],
-  language: 'English',
-  level: 'A1',
+  category_id: '',
+  category_name: '',
+  example: '',
+  language: 0,
+  level: 0,
 };
+
 interface TopicFormProps {
-  topicData: TopicData;
-  setTopicData: React.Dispatch<React.SetStateAction<TopicData>>;
-  isEditable: boolean;
-  setIsEditable: React.Dispatch<React.SetStateAction<boolean>>;
+  topicData: Topic;
+  setTopicData: React.Dispatch<React.SetStateAction<Topic>>;
 }
 
 const CategoryForm: React.FC<CategoryFormProps> = ({
-  isEditable,
-  setIsEditable,
   categoryData,
-  setCategoryData,
+  onClose,
+  isCategoryOpen,
+  setAllData,
+  setDeleteData,
+  setNewData,
 }) => {
+  const [data, setData] = useState<Category>(categoryData);
+  const [isDelete, setIsDelete] = useState<boolean>(false);
   const toast = useToast();
-
-  const handleChange = (
-    e: React.ChangeEvent<
-      HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
-    >
-  ) => {
-    const { name, value } = e.target;
-    setCategoryData(prevFormData => ({
-      ...prevFormData,
-      [name]: value,
-    }));
+  const lang = [];
+  data.language.forEach(l => {
+    lang.push(en.abbLang[l].name);
+  });
+  const onSubmit = () => {
+    let newData = { ...data };
+    newData.create_time = DateTime.fromISO(
+      newData.create_time + 'T00:00'
+    ).toString();
+    if (data._id) {
+      axios
+        .put('/api/admin/writing/category?categoryId=' + data._id, newData)
+        .then(res => {
+          toast({
+            title: 'Category updated successfully',
+            status: 'success',
+            duration: 3000,
+            isClosable: true,
+          });
+          setAllData(data);
+          onClose();
+        })
+        .catch(err => {
+          toast({
+            title: err?.response?.data?.message || err.message,
+            status: 'error',
+            duration: 3000,
+            isClosable: true,
+          });
+        });
+    } else {
+      axios
+        .post('/api/admin/writing/category', newData)
+        .then(res => {
+          toast({
+            title: 'Category added successfully',
+            status: 'success',
+            duration: 3000,
+            isClosable: true,
+          });
+          setNewData({ ...data, _id: res.data.id });
+          onClose();
+        })
+        .catch(err => {
+          console.log(err);
+          toast({
+            title: err?.response?.data?.message || err.message,
+            status: 'error',
+            duration: 3000,
+            isClosable: true,
+          });
+        });
+    }
   };
-
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    // Here you would typically send the formData to your backend.
-    toast({
-      title: 'Form submitted',
-      description: "We've received your submission.",
-      status: 'success',
-      duration: 9000,
-      isClosable: true,
-    });
+  const onDelete = () => {
+    axios
+      .delete('/api/admin/writing/category?categoryId=' + data._id)
+      .then(res => {
+        toast({
+          title: 'Category deleted successfully',
+          status: 'success',
+          duration: 3000,
+          isClosable: true,
+        });
+        setIsDelete(false);
+        setDeleteData(data);
+        onClose();
+      })
+      .catch(err => {
+        toast({
+          title: err?.response?.data?.message || err.message,
+          status: 'error',
+          duration: 3000,
+          isClosable: true,
+        });
+      });
   };
 
   return (
     <Box p={4}>
-      <form onSubmit={handleSubmit}>
-        <FormControl isRequired mb={4}>
-          <FormLabel htmlFor='name'>Name</FormLabel>
-          {isEditable ? (
-            <Input
-              id='name'
-              name='name'
-              value={categoryData.name}
-              onChange={handleChange}
-            />
-          ) : (
-            <Box>{categoryData.name}</Box>
-          )}
-        </FormControl>
-        <FormControl>
-          <FormLabel>Create Time</FormLabel>
-          {isEditable ? (
-            <Input
-              type='date'
-              name='create_time'
-              value={categoryData.create_time}
-              onChange={handleChange}
-            />
-          ) : (
-            <Text>
-              {new Date(categoryData.create_time).toLocaleDateString()}
-            </Text>
-          )}
-        </FormControl>
-        <FormControl isRequired mb={4}>
-          <FormLabel htmlFor='short'>Short Description</FormLabel>
-          {isEditable ? (
-            <Textarea
-              id='short'
-              name='short'
-              value={categoryData.short}
-              onChange={handleChange}
-            />
-          ) : (
-            <Box>{categoryData.short}</Box>
-          )}
-        </FormControl>
-        <FormControl isRequired mb={4}>
-          <FormLabel htmlFor='long'>Long Description</FormLabel>
-          {isEditable ? (
-            <Textarea
-              id='long'
-              name='long'
-              value={categoryData.long}
-              onChange={handleChange}
-            />
-          ) : (
-            <Box>{categoryData.long}</Box>
-          )}
-        </FormControl>
-        <FormControl isRequired mb={4}>
-          <FormLabel htmlFor='status'>Status</FormLabel>
-          {isEditable ? (
-            <Select
-              id='status'
-              name='status'
-              value={categoryData.status}
-              onChange={handleChange}
-            >
-              <option value='active'>Active</option>
-              <option value='disactive'>Disactive</option>
-            </Select>
-          ) : (
-            <Box>{categoryData.status}</Box>
-          )}
-        </FormControl>
-        <FormControl isRequired mb={4}>
-          <FormLabel htmlFor='language'>Language</FormLabel>
-          {isEditable ? (
-            <Select
-              id='language'
-              name='language'
-              value={categoryData.language}
-              onChange={handleChange}
-            >
-              <option value='english'>English</option>
-              <option value='french'>French</option>
-            </Select>
-          ) : (
-            <Box>{categoryData.language}</Box>
-          )}
-        </FormControl>
-        <HStack>
-          {!isEditable && (
-            <Button onClick={() => setIsEditable(true)} mb={4}>
-              Edit
-            </Button>
-          )}
-        </HStack>
-      </form>
+      <FormControl isRequired mb={4}>
+        <FormLabel htmlFor='name'>Name</FormLabel>
+        <Input
+          id='name'
+          name='name'
+          value={data.name}
+          onChange={e => setData({ ...data, name: e.target.value })}
+        />
+      </FormControl>
+      <FormControl>
+        <FormLabel>Create Time</FormLabel>
+        <Input
+          type='date'
+          name='create_time'
+          defaultValue={data.create_time}
+          onChange={e => setData({ ...data, create_time: e.target.value })}
+        />
+      </FormControl>
+      <FormControl isRequired mb={4}>
+        <FormLabel htmlFor='short'>Short Description</FormLabel>
+        <Textarea
+          id='short'
+          name='short'
+          value={data.short}
+          onChange={e => setData({ ...data, short: e.target.value })}
+        />
+      </FormControl>
+      <FormControl isRequired mb={4}>
+        <FormLabel htmlFor='long'>Long Description</FormLabel>
+        <Textarea
+          id='long'
+          name='long'
+          value={data.long}
+          onChange={e => setData({ ...data, long: e.target.value })}
+        />
+      </FormControl>
+      <FormControl isRequired mb={4}>
+        <FormLabel htmlFor='status'>Status</FormLabel>
+        <Select
+          id='status'
+          name='status'
+          value={data.status}
+          onChange={e => {
+            setData({ ...data, status: e.target.value });
+          }}
+        >
+          {en.status.map(status => (
+            <option key={status.value} value={status.value}>
+              {status.name}
+            </option>
+          ))}
+        </Select>
+      </FormControl>
+      <FormControl isRequired mb={4}>
+        <FormLabel htmlFor='language'>Language</FormLabel>
+        <CheckboxGroup
+          colorScheme='green'
+          defaultValue={data.language}
+          onChange={e => {
+            setData({ ...data, language: e });
+          }}
+        >
+          <Stack direction='column'>
+            {en.options.language.map(language => (
+              <Checkbox
+                key={language.value}
+                value={language.value}
+                isChecked={data.language.includes(language.value)}
+              >
+                {language.name}
+              </Checkbox>
+            ))}
+          </Stack>
+        </CheckboxGroup>
+      </FormControl>
+      <HStack>
+        <Button colorScheme='blue' mr={3} onClick={onClose}>
+          Cancel
+        </Button>
+        <Button variant='ghost' onClick={() => onSubmit()}>
+          {isCategoryOpen === 'Add' ? 'Add' : 'Update'}
+        </Button>
+        {data._id && (
+          <Button variant='ghost' onClick={() => setIsDelete(!isDelete)}>
+            {isDelete ? 'Cancel' : 'Delete'}
+          </Button>
+        )}
+        {isDelete && (
+          <Button variant='ghost' onClick={() => onDelete()}>
+            Really Delete
+          </Button>
+        )}
+      </HStack>
     </Box>
   );
 };
 const TopicForm: React.FC<TopicFormProps> = ({
+  categoryData,
   topicData,
-  setTopicData,
-  isEditable,
-  setIsEditable,
+  onClose,
+  isTopicOpen,
+  setAllData,
+  setDeleteData,
+  setNewData,
 }) => {
   const toast = useToast();
+  const [data, setData] = useState<Topic>(topicData);
+  const [categoryValue, setCategoryValue] = useState<
+    { name: string; id: string }[]
+  >([]);
+  const [langOption, setLangOption] = useState<
+    { name: string; value: number }[]
+  >([]);
+  const [isDelete, setIsDelete] = useState<boolean>(false);
 
-  const handleInputChange = (
+  const handleSteps = (
     e: React.ChangeEvent<
       HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
     >,
     index?: number,
     field?: string
   ) => {
-    const { name, value } = e.target;
+    const { value } = e.target;
     if (typeof index === 'number' && field) {
-      const newSteps = [...topicData.steps];
+      const newSteps = [...data.steps];
       newSteps[index] = { ...newSteps[index], [field]: value };
-      setTopicData({ ...topicData, steps: newSteps });
-    } else {
-      setTopicData({ ...topicData, [name]: value });
+      setData({ ...data, steps: newSteps });
     }
   };
-
   const handleAddStep = () => {
-    const newSteps = [...topicData.steps, { name: '', details: '' }];
-    setTopicData({ ...topicData, steps: newSteps });
+    const newSteps = [...data.steps, { name: '', details: '' }];
+    setData({ ...data, steps: newSteps });
   };
-
   const handleRemoveStep = (index: number) => {
-    const newSteps = [...topicData.steps];
+    const newSteps = [...data.steps];
     if (newSteps.length > 1) {
       newSteps.splice(index, 1);
-      setTopicData({ ...topicData, steps: newSteps });
+      setData({ ...data, steps: newSteps });
     } else {
       toast({
         title: 'Cannot remove step',
@@ -267,377 +311,710 @@ const TopicForm: React.FC<TopicFormProps> = ({
       });
     }
   };
-
-  // Add here your form submit handler
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    // Handle form submission logic here
-    console.log(topicData);
+  const changeCategory = v => {
+    let newOptions = [];
+    let categoryName;
+    categoryData.map(category => {
+      category._id === v && (categoryName = category.name);
+      category._id === v &&
+        category.language.forEach(l => {
+          newOptions.push({ name: en.options.language[l].name, value: l });
+        });
+    });
+    setLangOption(newOptions);
+    setData({
+      ...data,
+      language: newOptions[0].value,
+      category_id: v,
+      category_name: categoryName,
+    });
+  };
+  const onDelete = () => {
+    axios
+      .delete('/api/admin/writing/topic?topicId=' + data._id, data)
+      .then(res => {
+        toast({
+          title: 'Topic deleted successfully',
+          status: 'success',
+          duration: 3000,
+          isClosable: true,
+        });
+        setIsDelete(false);
+        setDeleteData(data);
+        onClose();
+      })
+      .catch(err => {
+        toast({
+          title: 'An unexpected error occurred',
+          description: err?.response?.data?.message || err.message,
+          status: 'error',
+          duration: 3000,
+          isClosable: true,
+        });
+      });
   };
 
+  const onSubmit = () => {
+    let newData = { ...data };
+    newData.example.length > 0 &&
+      (newData.example = newData.example.split('\n'));
+    newData.create_time = DateTime.fromISO(
+      newData.create_time + 'T00:00'
+    ).toString();
+    newData.endtime = DateTime.fromISO(newData.endtime + 'T00:00').toString();
+    if (data._id) {
+      axios
+        .put('/api/admin/writing/topic?topicId=' + data._id, newData)
+        .then(res => {
+          toast({
+            title: 'Successfull updated',
+            status: 'success',
+            duration: 3000,
+            isClosable: true,
+          });
+          newData.create_time = DateTime.fromISO(newData.create_time)
+            .toLocal()
+            .toFormat('yyyy-MM-dd');
+          newData.endtime = DateTime.fromISO(newData.endtime)
+            .toLocal()
+            .toFormat('yyyy-MM-dd');
+          setAllData(newData);
+          onClose();
+        })
+        .catch(err => {
+          toast({
+            title: 'An unexpected error occurred',
+            description: err?.response?.data?.message || err.message,
+            status: 'error',
+            duration: 3000,
+            isClosable: true,
+          });
+        });
+    } else {
+      axios
+        .post('/api/admin/writing/topic', newData)
+        .then(res => {
+          toast({
+            title: 'Successful added',
+            status: 'success',
+            duration: 3000,
+            isClosable: true,
+          });
+          newData._id = res.data.id;
+          newData.create_time = DateTime.fromISO(newData.create_time)
+            .toLocal()
+            .toFormat('yyyy-MM-dd');
+          newData.endtime = DateTime.fromISO(newData.endtime)
+            .toLocal()
+            .toFormat('yyyy-MM-dd');
+          setNewData(newData);
+          onClose();
+        })
+        .catch(err => {
+          toast({
+            title: 'An unexpected error occurred',
+            description: err?.response?.data?.message || err.message,
+            status: 'error',
+            duration: 3000,
+            isClosable: true,
+          });
+        });
+    }
+  };
+
+  useEffect(() => {
+    let newOptions = [];
+    let categoryOptions = [];
+    categoryData[0].language.forEach(l => {
+      newOptions.push({ name: en.options.language[l].name, value: l });
+    });
+    categoryData.map(category => {
+      categoryOptions.push({ name: category.name, id: category._id });
+    });
+    setLangOption(newOptions);
+    setCategoryValue(categoryOptions);
+    setData({
+      ...topicData,
+      category_id: categoryData[0]._id,
+      category_name: categoryData[0].name,
+      language: newOptions[0].value,
+      example:
+        !isString(topicData.example) && topicData?.example.length > 0
+          ? topicData.example.join('\n')
+          : topicData.example,
+    });
+  }, []);
+
   return (
-    <Box as='form' onSubmit={handleSubmit} p={4}>
-      <VStack spacing={4} align='flex-start'>
-        <FormControl>
-          <FormLabel>Name</FormLabel>
-          {isEditable ? (
-            <Input
-              name='name'
-              value={topicData.name}
-              onChange={handleInputChange}
-            />
-          ) : (
-            <Text>{topicData.name}</Text>
-          )}
-        </FormControl>
+    <VStack spacing={4} align='flex-start'>
+      <FormControl>
+        <FormLabel>Name</FormLabel>
+        <Input
+          name='name'
+          value={data.name}
+          onChange={e => setData({ ...data, name: e.target.value })}
+        />
+      </FormControl>
+      <FormControl>
+        <FormLabel>Category</FormLabel>
+        <Select
+          name='category'
+          value={data.category_id}
+          onChange={e => {
+            changeCategory(e.target.value);
+          }}
+        >
+          {categoryValue.map(category => (
+            <option key={category.id} value={category.id}>
+              {category.name}
+            </option>
+          ))}
+        </Select>
+      </FormControl>
+      <FormControl>
+        <FormLabel>Language</FormLabel>
+        <Select
+          name='language'
+          value={data.language}
+          onChange={e => {
+            setData({ ...data, language: e.target.value });
+          }}
+        >
+          {langOption.map(language => (
+            <option key={language.value} value={language.value}>
+              {language.name}
+            </option>
+          ))}
+        </Select>
+      </FormControl>
+      <FormControl>
+        <FormLabel>Level</FormLabel>
 
-        <FormControl>
-          <FormLabel>Create Time</FormLabel>
-          {isEditable ? (
-            <Input
-              type='date'
-              name='create_time'
-              value={topicData.create_time}
-              onChange={handleInputChange}
-            />
-          ) : (
-            <Text>{new Date(topicData.create_time).toLocaleDateString()}</Text>
-          )}
-        </FormControl>
+        <Select
+          name='level'
+          value={data.level}
+          onChange={e => {
+            setData({ ...data, level: e.target.value });
+          }}
+        >
+          {en.Level.map(level => (
+            <option key={level.value} value={level.value}>
+              {level.name}
+            </option>
+          ))}
+        </Select>
+      </FormControl>
+      <FormControl>
+        <FormLabel>Create Time</FormLabel>
+        <Input
+          type='date'
+          name='create_time'
+          value={data.create_time}
+          onChange={e => {
+            setData({ ...data, create_time: e.target.value });
+          }}
+        />
+      </FormControl>
+      <FormControl>
+        <FormLabel>End Time</FormLabel>
+        <Input
+          type='date'
+          name='endtime'
+          value={data.endtime}
+          onChange={e => {
+            setData({ ...data, endtime: e.target.value });
+          }}
+        />
+      </FormControl>
+      <FormControl>
+        <FormLabel>Description</FormLabel>
+        <Textarea
+          name='description'
+          value={data.description}
+          onChange={e => {
+            setData({ ...data, description: e.target.value });
+          }}
+        />
+      </FormControl>
+      {data.steps.map((step, index) => (
+        <HStack key={index} spacing={4} align='flex-Start' w={'100%'}>
+          <FormControl maxW={'250px'} w={'30%'}>
+            <FormLabel>Step Name {index + 1}</FormLabel>
 
-        <FormControl>
-          <FormLabel>Description</FormLabel>
-          {isEditable ? (
             <Textarea
-              name='description'
-              value={topicData.description}
-              onChange={handleInputChange}
+              name={`stepName-${index}`}
+              value={step.name}
+              rows={2}
+              onChange={e => handleSteps(e, index, 'name')}
             />
-          ) : (
-            <Text>{topicData.description}</Text>
-          )}
-        </FormControl>
-
-        <FormControl>
-          <FormLabel>End Time</FormLabel>
-          {isEditable ? (
-            <Input
-              type='date'
-              name='endtime'
-              value={topicData.endtime}
-              onChange={handleInputChange}
+          </FormControl>
+          <FormControl>
+            <FormLabel>Details</FormLabel>
+            <Textarea
+              name={`stepDetails-${index}`}
+              rows={2}
+              value={step.details}
+              onChange={e => handleSteps(e, index, 'details')}
             />
-          ) : (
-            <Text>{new Date(topicData.endtime).toLocaleDateString()}</Text>
-          )}
-        </FormControl>
-
-        {topicData.steps.map((step, index) => (
-          <HStack key={index} spacing={4} align='flex-Start'>
-            <FormControl>
-              <FormLabel>Step Name</FormLabel>
-              {isEditable ? (
-                <Input
-                  name={`stepName-${index}`}
-                  value={step.name}
-                  onChange={e => handleInputChange(e, index, 'name')}
-                />
-              ) : (
-                <Text>{step.name}</Text>
-              )}
-            </FormControl>
-            <FormControl>
-              <FormLabel>Details</FormLabel>
-              {isEditable ? (
-                <Textarea
-                  name={`stepDetails-${index}`}
-                  rows={1}
-                  value={step.details}
-                  onChange={e => handleInputChange(e, index, 'details')}
-                />
-              ) : (
-                <Text>{step.details}</Text>
-              )}
-            </FormControl>
-            {isEditable && (
-              <IconButton
-                mt='32px'
-                aria-label='Remove step'
-                icon={<AiOutlineMinus />}
-                onClick={() => handleRemoveStep(index)}
-              />
-            )}
-          </HStack>
-        ))}
-        {isEditable && (
-          <Button leftIcon={<AiOutlinePlus />} onClick={handleAddStep}>
-            Add Step
+          </FormControl>
+          <IconButton
+            mt='32px'
+            aria-label='Remove step'
+            icon={<AiOutlineMinus />}
+            onClick={() => handleRemoveStep(index)}
+          />
+        </HStack>
+      ))}
+      <Button leftIcon={<AiOutlinePlus />} onClick={handleAddStep}>
+        Add Step
+      </Button>
+      <FormControl>
+        <FormLabel>Example</FormLabel>
+        <Textarea
+          name='example'
+          value={data.example}
+          onChange={e => {
+            setData({ ...data, example: e.target.value });
+          }}
+        />
+      </FormControl>
+      <HStack>
+        <Button colorScheme='blue' mr={3} onClick={onClose}>
+          Cancel
+        </Button>
+        <Button variant='ghost' onClick={onSubmit}>
+          {isTopicOpen === 'Add' ? 'Add' : 'Update'}
+        </Button>
+        {data._id && (
+          <Button variant='ghost' onClick={() => setIsDelete(!isDelete)}>
+            {isDelete ? 'Cancel' : 'Delete'}
           </Button>
         )}
-
-        <FormControl>
-          <FormLabel>Category</FormLabel>
-          {isEditable ? (
-            <Select
-              name='category'
-              value={topicData.category}
-              onChange={handleInputChange}
-            >
-              <option value='Easy'>Easy</option>
-              <option value='Intermediate'>Intermediate</option>
-              <option value='Hard'>Hard</option>
-            </Select>
-          ) : (
-            <Text>{topicData.category}</Text>
-          )}
-        </FormControl>
-
-        <FormControl>
-          <FormLabel>Example</FormLabel>
-          {isEditable ? (
-            <Textarea
-              name='example'
-              value={topicData.example}
-              onChange={handleInputChange}
-            />
-          ) : (
-            <Text>{topicData.example}</Text>
-          )}
-        </FormControl>
-
-        <FormControl>
-          <FormLabel>Language</FormLabel>
-          {isEditable ? (
-            <Select
-              name='language'
-              value={topicData.language}
-              onChange={handleInputChange}
-            >
-              <option value='English'>English</option>
-              <option value='French'>French</option>
-            </Select>
-          ) : (
-            <Text>{topicData.language}</Text>
-          )}
-        </FormControl>
-
-        <FormControl>
-          <FormLabel>Level</FormLabel>
-          {isEditable ? (
-            <Select
-              name='level'
-              value={topicData.level}
-              onChange={handleInputChange}
-            >
-              {['A1', 'A2', 'B1', 'B2', 'C1', 'C2'].map(level => (
-                <option key={level} value={level}>
-                  {level}
-                </option>
-              ))}
-            </Select>
-          ) : (
-            <Text>{topicData.level}</Text>
-          )}
-        </FormControl>
-
-        {!isEditable && (
-          <Button onClick={() => setIsEditable(true)}>Edit</Button>
+        {isDelete && (
+          <Button variant='ghost' onClick={() => onDelete()}>
+            Really Delete
+          </Button>
         )}
-      </VStack>
-    </Box>
+      </HStack>
+    </VStack>
   );
 };
 
-const LoginPage: React.FC = () => {
+const CategoryPage: React.FC = ({ categoryData, setIsOpen, setData }) => {
+  return (
+    <Accordion allowToggle={true} w={'100%'}>
+      {categoryData.map((category, idx) => {
+        let lang = [];
+        category.language.forEach(l => {
+          lang.push(en.abbLang[l].name);
+        });
+        return (
+          <AccordionItem key={'category' + idx}>
+            <h2>
+              <AccordionButton>
+                <Box as='span' flex='1' textAlign='left'>
+                  {category.name}
+                </Box>
+                <AccordionIcon />
+              </AccordionButton>
+            </h2>
+            <AccordionPanel pb={4}>
+              <Text fontWeight='bold' fontSize={'16px'}>
+                Create time
+              </Text>
+              <Text>{category.create_time.replace(/-/g, '/')}</Text>
+              <Text fontWeight='bold' fontSize={'16px'}>
+                Short
+              </Text>
+              <Text>{category.short}</Text>
+              <Text fontWeight='bold' fontSize={'16px'}>
+                long
+              </Text>
+              <Text>{category.long}</Text>
+              <Text fontWeight='bold' fontSize={'16px'}>
+                Topics Amount
+              </Text>
+              <Text>{category?.topics?.length || 0}</Text>
+              <Text fontWeight='bold' fontSize={'16px'}>
+                Status
+              </Text>
+              <Text>{en.status[category.status].name}</Text>
+              <Text fontWeight='bold' fontSize={'16px'}>
+                Subscribed Amount
+              </Text>
+              <Text>{category?.subscribed?.length || 0}</Text>
+              <Text fontWeight='bold' fontSize={'16px'}>
+                Language
+              </Text>
+              <Text>{lang.join(', ')}</Text>
+              <Button
+                mt='10px'
+                onClick={() => {
+                  setIsOpen('Edit');
+                  setData(category);
+                }}
+              >
+                Edit
+              </Button>
+            </AccordionPanel>
+          </AccordionItem>
+        );
+      })}
+    </Accordion>
+  );
+};
+
+const TopicPage: React.FC = ({ topicData, setIsOpen, setData }) => {
+  return (
+    <Accordion allowToggle={true} w={'100%'}>
+      {topicData.map((topic, idx) => {
+        return (
+          <AccordionItem key={'topic' + idx}>
+            <h2>
+              <AccordionButton>
+                <Box as='span' flex='1' textAlign='left'>
+                  <Text display={'inline'}>{topic.name}</Text>
+                  {new Date(topic.create_time) > new Date() && (
+                    <Text display={'inline'} color='#cdaf43'>
+                      {' '}
+                      Not yet published
+                    </Text>
+                  )}
+                </Box>
+                <AccordionIcon />
+              </AccordionButton>
+            </h2>
+            <AccordionPanel pb={4}>
+              <Text fontWeight='bold' fontSize={'16px'}>
+                Category name
+              </Text>
+              {topic?.category_name}
+              <Text fontWeight='bold' fontSize={'16px'}>
+                Language
+              </Text>
+              <Text>{en.options.language[topic?.language]?.name}</Text>
+              <Text fontWeight='bold' fontSize={'16px'}>
+                Level
+              </Text>
+              <Text>{en.Level[topic?.level]?.name}</Text>
+              <Text fontWeight='bold' fontSize={'16px'}>
+                Create time
+              </Text>
+              <Text>{topic.create_time.replace(/-/g, '/')}</Text>
+              <Text fontWeight='bold' fontSize={'16px'}>
+                End time
+              </Text>
+              <Text>{topic.endtime.replace(/-/g, '/')}</Text>
+              <Text fontWeight='bold' fontSize={'16px'}>
+                Description
+              </Text>
+              <Text>{topic.description}</Text>
+              <Text fontWeight='bold' fontSize={'16px'}>
+                Steps
+              </Text>
+              {topic?.steps?.map((step, idx) => {
+                return (
+                  <Box pl={2} key={'steps' + idx}>
+                    <Text fontWeight={'600'}>{step.name}</Text>
+                    <Text pl='10px'>{step.details}</Text>
+                  </Box>
+                );
+              })}
+              <Text fontWeight='bold' fontSize={'16px'}>
+                Example
+              </Text>
+              {topic?.example.length > 1 ? (
+                topic?.example.map((ex, idx) => (
+                  <Text key={'ex' + idx}>{ex}</Text>
+                ))
+              ) : (
+                <Text>{topic?.example}</Text>
+              )}
+              <Text fontWeight='bold' fontSize={'16px'}>
+                Subscribed Amount
+              </Text>
+              <Text>{topic?.subscribed?.length || 0}</Text>
+              <Button
+                mt='10px'
+                onClick={() => {
+                  setIsOpen('Edit');
+                  setData(topic);
+                }}
+              >
+                Edit
+              </Button>
+            </AccordionPanel>
+          </AccordionItem>
+        );
+      })}
+    </Accordion>
+  );
+};
+
+const AdminWritingPage: React.FC = () => {
   const [isCategoryOpen, setIsCategoryOpen] = useState<
     false | 'AI' | 'Add' | 'Edit'
   >(false);
   const [isTopicOpen, setIsTopicOpen] = useState<false | 'AI' | 'Add' | 'Edit'>(
     false
   );
-  const [isEditable, setIsEditable] = useState<boolean>(true);
-  const [categoryData, setCategoryData] =
-    useState<CategoryData>(initialCategoryData);
-  const [topicData, setTopicData] = useState<TopicData>(initialTopicData);
+  const [categoryData, setCategoryData] = useState<Category[] | null>(null);
+  const [topicData, setTopicData] = useState<Topic[] | null>(null);
+  const [openData, setOpenData] = useState<Category | Topic | null>(
+    null
+  );
+  const [originalData, setOriginalData] = useState<{
+    topics: Topic[] | null;
+    categories: Category[] | null;
+  }>(null);
 
   const router = useRouter();
 
-  const onClose = () => {
-    setIsCategoryOpen(false);
-    setIsEditable(false);
-    setIsTopicOpen(false);
-    setCategoryData(initialCategoryData);
-    setTopicData(initialTopicData);
+  const setAllData = (value: Category | Topic, type, mode) => {
+    if (mode !== 'delete') {
+      const newData = (type === 'category' ? categoryData : topicData)?.map(
+        item => {
+          if (item._id === value._id) {
+            // Found the matching object, return a new object with the updated name
+            return value;
+          }
+          // Not the object we're looking for, return it unchanged
+          return item;
+        }
+      );
+      mode === 'add' && newData.push(value);
+      type === 'category' ? setCategoryData(newData) : setTopicData(newData);
+    } else {
+      let newData = [];
+      (type === 'category' ? categoryData : topicData)?.map(item => {
+        if (item._id !== value._id) {
+          return newData.push(item);
+        }
+        // Not the object we're looking for, return it unchanged
+        return;
+      });
+      type === 'category' ? setCategoryData(newData) : setTopicData(newData);
+    }
   };
 
+  const onClose = () => {
+    setIsCategoryOpen(false);
+    setIsTopicOpen(false);
+    setOpenData(null);
+  };
+
+  useEffect(() => {
+    let Datas = {};
+    axios
+      .get('/api/admin/writing/category')
+      .then(res => {
+        let newData = res.data.map(item => {
+          item.create_time = DateTime.fromISO(item.create_time)
+            .toLocal()
+            .toFormat('yyyy-MM-dd');
+          return item;
+        });
+        Datas.categories = newData;
+        setCategoryData(newData);
+      })
+      .catch(err => {
+        console.log(err);
+      });
+    axios
+      .get('/api/admin/writing/topic')
+      .then(res => {
+        let newData = res.data.map(item => {
+          item.create_time = DateTime.fromISO(item.create_time)
+            .toLocal()
+            .toFormat('yyyy-MM-dd');
+          item.endtime = DateTime.fromISO(item.endtime)
+            .toLocal()
+            .toFormat('yyyy-MM-dd');
+          return item;
+        });
+        Datas.topics = newData;
+        setTopicData(newData);
+      })
+      .catch(err => {
+        console.log(err);
+      });
+    setOriginalData(Datas);
+  }, []);
+
   return (
-    <VStack
-      align='center'
-      className='login-container'
-      width={'100%'}
-      px={'20px'}
-    >
-      <Button mt={5} onClick={() => router.push('/app/admin/speaking')}>
-        To Speaking
-      </Button>
-      <Tabs width={'100%'} mx={'20px'}>
-        <TabList>
-          <Tab>Category</Tab>
-          <Tab>Topics</Tab>
-        </TabList>
-        <TabPanels>
-          <TabPanel>
-            <Flex justifyContent='space-between' mb={4} w={'100%'}>
-              <HStack justify={'space-between'} w={'100%'}>
-                <FiltersComponent
-                  visibleFilters={['level', 'language', 'status']}
-                />
-                <HStack>
-                  <Button
-                    onClick={() => {
-                      setIsCategoryOpen('Add');
-                      setIsEditable(true);
-                    }}
-                  >
-                    Add Category
-                  </Button>
-                  <Button onClick={() => setIsCategoryOpen('AI')}>
-                    Add With AI
-                  </Button>
+    originalData && (
+      <VStack align='center' width={'100%'} px={'20px'}>
+        <HStack>
+          <Button mt={5} onClick={() => router.push('/app/admin/speaking')}>
+            To Speaking
+          </Button>
+          <Button mt={5} onClick={() => router.push('/app/admin/news')}>
+            To News
+          </Button>
+        </HStack>
+        <Tabs width={'100%'} mx={'20px'}>
+          <TabList>
+            <Tab>Category</Tab>
+            <Tab>Topics</Tab>
+          </TabList>
+          <TabPanels>
+            <TabPanel>
+              <VStack justifyContent='space-between' mb={4} w={'100%'}>
+                <HStack justify={'space-between'} w={'100%'}>
+                  <FiltersComponent
+                    type={'category'}
+                    data={originalData.categories}
+                    setData={v => setCategoryData(v)}
+                    visibleFilters={[, 'status', 'language']}
+                  />
+                  <HStack>
+                    <Button
+                      onClick={() => {
+                        setIsCategoryOpen('Add');
+                        setOpenData(initialCategoryData);
+                      }}
+                    >
+                      Add Category
+                    </Button>
+                    <Button onClick={() => setIsCategoryOpen('AI')}>
+                      Add With AI
+                    </Button>
+                  </HStack>
                 </HStack>
-              </HStack>
-            </Flex>
-          </TabPanel>
-          <TabPanel>
-            <Flex justifyContent='space-between' mb={4} w={'100%'}>
-              <HStack justify={'space-between'} w={'100%'}>
-                <FiltersComponent
-                  visibleFilters={['level', 'language', 'status']}
-                />
-                <HStack>
-                  <Button
-                    onClick={() => {
-                      setIsTopicOpen('Add');
-                      setIsEditable(true);
-                    }}
-                  >
-                    Add Topic
-                  </Button>
-                  <Button onClick={() => setIsTopicOpen('AI')}>
-                    Add With AI
-                  </Button>
+                {categoryData && (
+                  <CategoryPage
+                    categoryData={categoryData}
+                    setIsOpen={setIsCategoryOpen}
+                    setData={setOpenData}
+                  />
+                )}
+              </VStack>
+            </TabPanel>
+            <TabPanel>
+              <VStack justifyContent='space-between' mb={4} w={'100%'}>
+                <HStack justify={'space-between'} w={'100%'}>
+                  <FiltersComponent
+                    type={'topic'}
+                    data={originalData.topics}
+                    setData={v => setTopicData(v)}
+                    visibleFilters={['status', 'level', 'language', 'sort']}
+                  />
+                  <HStack>
+                    <Button
+                      onClick={() => {
+                        setIsTopicOpen('Add');
+                        setOpenData(initialTopicData);
+                      }}
+                    >
+                      Add Topic
+                    </Button>
+                    <Button onClick={() => setIsTopicOpen('AI')}>
+                      Add With AI
+                    </Button>
+                  </HStack>
                 </HStack>
-              </HStack>
-            </Flex>
-          </TabPanel>
-        </TabPanels>
-      </Tabs>
-      <Modal
-        isOpen={!!isCategoryOpen}
-        onClose={onClose}
-        closeOnOverlayClick={false}
-      >
-        <ModalOverlay />
-        {isCategoryOpen === 'Add' ? (
-          <ModalContent>
-            <ModalHeader>Add Category</ModalHeader>
-            <ModalBody>
-              <CategoryForm
-                isEditable={isEditable}
-                setIsEditable={setIsEditable}
-                categoryData={categoryData}
-                setCategoryData={setCategoryData}
-              />
-            </ModalBody>
-
-            <ModalFooter>
-              <Button colorScheme='blue' mr={3} onClick={onClose}>
-                Cancel
-              </Button>
-              <Button variant='ghost'>Add</Button>
-            </ModalFooter>
-          </ModalContent>
-        ) : (
-          <ModalContent>
-            <ModalHeader>Generate AI Category</ModalHeader>
-            <ModalBody>
-              {isEmpty(categoryData.name) ? (
-                <Button>Generate</Button>
-              ) : (
+                {topicData && (
+                  <TopicPage
+                    topicData={topicData}
+                    setIsOpen={setIsTopicOpen}
+                    setData={setOpenData}
+                  />
+                )}
+              </VStack>
+            </TabPanel>
+          </TabPanels>
+        </Tabs>
+        <Modal
+          isOpen={!!isCategoryOpen}
+          onClose={onClose}
+          closeOnOverlayClick={false}
+        >
+          <ModalOverlay />
+          {isCategoryOpen === 'Add' || isCategoryOpen === 'Edit' ? (
+            <ModalContent w={'90%'} maxW={'1000px'}>
+              <ModalHeader>
+                {isCategoryOpen === 'Add' ? 'Add Category' : 'Edit Category'}
+              </ModalHeader>
+              <ModalBody>
                 <CategoryForm
-                  isEditable={isEditable}
-                  setIsEditable={setIsEditable}
-                  categoryData={categoryData}
-                  setCategoryData={setCategoryData}
+                  categoryData={openData}
+                  onClose={onClose}
+                  isCategoryOpen={isCategoryOpen}
+                  setAllData={value => setAllData(value, 'category', 'edit')}
+                  setNewData={value => setAllData(value, 'category', 'add')}
+                  setDeleteData={value =>
+                    setAllData(value, 'category', 'delete')
+                  }
                 />
-              )}
-            </ModalBody>
+              </ModalBody>
+            </ModalContent>
+          ) : (
+            <ModalContent w={'90%'} maxW={'1000px'}>
+              <ModalHeader>Generate AI Category</ModalHeader>
+              <ModalBody>
+                {isEmpty(categoryData?.name) ? (
+                  <Button>Generate</Button>
+                ) : (
+                  <CategoryForm categoryData={openData} />
+                )}
+              </ModalBody>
 
-            <ModalFooter>
-              <Button colorScheme='blue' mr={3} onClick={onClose}>
-                Cancel
-              </Button>
-              {!isEmpty(categoryData.name) && (
-                <Button variant='ghost'>Add</Button>
-              )}
-            </ModalFooter>
-          </ModalContent>
-        )}
-      </Modal>
-      <Modal
-        isOpen={!!isTopicOpen}
-        onClose={onClose}
-        closeOnOverlayClick={false}
-      >
-        <ModalOverlay />
-        {isTopicOpen === 'Add' ? (
-          <ModalContent>
-            <ModalHeader>Add Topic</ModalHeader>
-            <ModalBody>
-              <TopicForm
-                isEditable={isEditable}
-                setIsEditable={setIsEditable}
-                topicData={topicData}
-                setTopicData={setTopicData}
-              />
-            </ModalBody>
-
-            <ModalFooter>
-              <Button colorScheme='blue' mr={3} onClick={onClose}>
-                Cancel
-              </Button>
-              <Button variant='ghost'>Add</Button>
-            </ModalFooter>
-          </ModalContent>
-        ) : (
-          <ModalContent>
-            <ModalHeader>Generate AI Topic</ModalHeader>
-            <ModalBody>
-              {isEmpty(categoryData.name) ? (
-                <Button>Generate</Button>
-              ) : (
+              <ModalFooter>
+                <Button colorScheme='blue' mr={3} onClick={onClose}>
+                  Cancel
+                </Button>
+                {!isEmpty(categoryData?.name) && (
+                  <Button variant='ghost'>Add</Button>
+                )}
+              </ModalFooter>
+            </ModalContent>
+          )}
+        </Modal>
+        <Modal
+          isOpen={!!isTopicOpen}
+          onClose={onClose}
+          closeOnOverlayClick={false}
+        >
+          <ModalOverlay />
+          {isTopicOpen === 'Add' || isTopicOpen === 'Edit' ? (
+            <ModalContent w={'90%'} maxW={'1000px'}>
+              <ModalHeader>
+                {isTopicOpen === 'Add' ? 'Add Topic' : 'Edit Topic'}
+              </ModalHeader>
+              <ModalBody>
                 <TopicForm
-                  isEditable={isEditable}
-                  setIsEditable={setIsEditable}
-                  topicData={topicData}
-                  setTopicData={setTopicData}
+                  topicData={openData}
+                  onClose={onClose}
+                  categoryData={categoryData}
+                  isTopicOpen={isTopicOpen}
+                  setAllData={value => setAllData(value, 'topic', 'edit')}
+                  setDeleteData={value => setAllData(value, 'topic', 'delete')}
+                  setNewData={value => setAllData(value, 'topic', 'add')}
                 />
-              )}
-            </ModalBody>
-
-            <ModalFooter>
-              <Button colorScheme='blue' mr={3} onClick={onClose}>
-                Cancel
-              </Button>
-              {!isEmpty(categoryData.name) && (
+              </ModalBody>
+            </ModalContent>
+          ) : (
+            <ModalContent w={'90%'} maxW={'1000px'}>
+              <ModalHeader>Generate AI Topic</ModalHeader>
+              <ModalBody>
+                {isEmpty(topicData?.name) ? (
+                  <Button>Generate</Button>
+                ) : (
+                  <TopicForm topicData={openData} />
+                )}
+              </ModalBody>
+              <ModalFooter>
+                <Button colorScheme='blue' mr={3} onClick={onClose}>
+                  Cancel
+                </Button>
                 <Button variant='ghost'>Add</Button>
-              )}
-            </ModalFooter>
-          </ModalContent>
-        )}
-      </Modal>
-    </VStack>
+              </ModalFooter>
+            </ModalContent>
+          )}
+        </Modal>
+      </VStack>
+    )
   );
 };
 
-export default LoginPage;
+export default AdminWritingPage;
