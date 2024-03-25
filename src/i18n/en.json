@@ -6,12 +6,12 @@
       { "name": "Chinese", "value": "2" }
     ],
     "gender": [
-      { "name": "Male", "value": 0 },
-      { "name": "Female", "value": 1 },
-      { "name": "Non-binary", "value": 2 },
-      { "name": "Gender-fluid", "value": 3 },
-      { "name": "Agender", "value": 4 },
-      { "name": "Other", "value": 5 }
+      { "name": "Male", "value": "0" },
+      { "name": "Female", "value": "1" },
+      { "name": "Non-binary", "value": "2" },
+      { "name": "Gender-fluid", "value": "3" },
+      { "name": "Agender", "value": "4" },
+      { "name": "Other", "value": "5" }
     ],
     "country": [
       { "name": "Afghanistan", "value": "AF" },
@@ -218,9 +218,9 @@
     { "name": "C2", "value": 5 }
   ],
   "abbLang": [
-    { "name": "EN", "value": 0 },
-    { "name": "FR", "value": 1 },
-    { "name": "CH", "value": 2 }
+    { "name": "EN", "value": "0" },
+    { "name": "FR", "value": "1" },
+    { "name": "CH", "value": "2" }
   ],
   "status": [
     { "name": "Ongoing", "value": 0 },
