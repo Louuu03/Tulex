@@ -48,3 +48,6 @@ lambda/node_modules
 lambda/schemas.js
 lambda/FakeData.js
 lambda/.aws-sam
+certificates
+
+.env
