@@ -1,4 +1,4 @@
-.writing-container {
+.home-container {
   .guide-box {
     width: 150px;
     height: 60px;
@@ -7,9 +7,9 @@
     margin: 10px;
     text-align: center;
     line-height: 55px;
-    font-weight: 600;
-    box-shadow: 10px -10px #ecc94b;
     color: black;
+    box-shadow: 10px -10px #ecc94b;
+    font-weight: 600;
     &:hover {
       cursor: pointer;
     }

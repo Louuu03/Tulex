@@ -1,0 +1,18 @@
+.inputfile-container {
+  width: 140px;
+  height: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  #file-upload {
+    display: none;
+  }
+  .inputfile-label {
+    background-color: #eee3bac2;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    padding: 10px 20px;
+    color: black;
+  }
+}
