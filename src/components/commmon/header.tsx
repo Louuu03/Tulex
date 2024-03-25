@@ -33,6 +33,7 @@ const HeaderComponent: React.FC<HeaderProps> = ({ userName, userImage }) => {
     ) {
       isEmpty(parentTitle) && (parentTitle = pathParts[pathParts.length - 2]);
     }
+    pathParts[pathParts.length - 2] === 'admin' && (parentTitle = 'Admin');
 
     if (returnTitle === 'App') {
       returnTitle = 'Home';
@@ -42,20 +43,30 @@ const HeaderComponent: React.FC<HeaderProps> = ({ userName, userImage }) => {
       returnTitle = 'All Drafts';
     } else if (returnTitle === 'Allsubmissions') {
       returnTitle = 'All Submissions';
-    } else if (returnTitle === 'Allevents') {
-      returnTitle = 'All Events';
+    } else if (returnTitle === 'Alltopics') {
+      returnTitle = 'All Topics in';
     } else if (returnTitle === 'Myevents') {
       returnTitle = 'My Events';
     } else if (returnTitle === 'Learninglanguages') {
       returnTitle = 'Learning Languages';
+    } else if (returnTitle === 'Writingrules') {
+      returnTitle = 'Writing Rules';
     }
 
     return returnTitle;
   };
   const title = formatTitle(pathname);
 
-  return (
-    title!=='Login'?<Flex
+  const isHeader =
+    title !== 'Login' &&
+    title !== 'Admin' &&
+    parentTitle !== 'Admin' &&
+    title !== 'Callback' &&
+    title !== 'Guide' &&
+    title !== '';
+
+  return isHeader ? (
+    <Flex
       as='header'
       w='100%'
       align='center'
@@ -74,10 +85,10 @@ const HeaderComponent: React.FC<HeaderProps> = ({ userName, userImage }) => {
       bg={'white'}
     >
       <VStack align={'left'} spacing={0}>
-        <Text fontSize='sm' pt={'1'} mb={'-10px'}>
+        <Text fontSize='sm' pt={'1'} mb={'-5px'}>
           TULEX{!isEmpty(parentTitle) && ' / ' + parentTitle}
         </Text>
-        <Text fontSize='4xl' fontWeight='bold'>
+        <Text fontSize='4xl' fontWeight='bold' lineHeight={'40px'}>
           {title}
         </Text>
       </VStack>
@@ -87,7 +98,9 @@ const HeaderComponent: React.FC<HeaderProps> = ({ userName, userImage }) => {
           <Avatar size='sm' name={userName} src={userImage} />
         </Flex>
       )}
-    </Flex>:''
+    </Flex>
+  ) : (
+    ''
   );
 };
 

@@ -98,8 +98,17 @@ const Navbar: React.FC = () => {
     ];
   }, [isLargerThan768]);
 
-  return (
-    router.pathname!=='/app/login'?<Flex
+  const isNavbar =
+    router.pathname !== '/app/login' &&
+    router.pathname !== '/app/admin' &&
+    router.pathname !== '/app/admin/writing' &&
+    router.pathname !== '/app/admin/speaking' &&
+    router.pathname !== '/app/auth/callback' &&
+    router.pathname !== '/app/guide' &&
+    router.pathname !== '/';
+
+  return isNavbar ? (
+    <Flex
       direction={isLargerThan768 ? 'column' : 'row'}
       position='fixed'
       bottom={isLargerThan768 ? 'initial' : '-1px'}
@@ -122,7 +131,8 @@ const Navbar: React.FC = () => {
         <NavItem key={index} {...item} isCurrent={isCurrent} />
       ))}
     </Flex>
-    :''
+  ) : (
+    ''
   );
 };
 

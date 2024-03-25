@@ -1,4 +1,3 @@
-import fakeData from '@/utils/fakedata';
 import {
   Accordion,
   AccordionButton,
@@ -11,14 +10,20 @@ import {
 } from '@chakra-ui/react';
 
 interface DescriptionProps {
-  isSubscribed: boolean;
+  data: {
+    steps: {
+      name: string;
+      details: string;
+    }[];
+    description: string;
+    example: string[];
+  };
 }
-const Description: React.FC<DescriptionProps> = ({ isSubscribed }) => {
+
+const Description: React.FC<DescriptionProps> = ({ data }) => {
   return (
-    <VStack w={'100%'}>
-      <Text textAlign={'justify'}>
-        {fakeData.alleventsData[0].introduction}
-      </Text>
+    <VStack w={'100%'} align={'flex-start'}>
+      <Text textAlign={'justify'}>{data.description}</Text>
       <Accordion defaultIndex={[0]} allowMultiple w={'100%'}>
         <AccordionItem>
           <h2>
@@ -30,17 +35,17 @@ const Description: React.FC<DescriptionProps> = ({ isSubscribed }) => {
             </AccordionButton>
           </h2>
           <AccordionPanel px={0}>
-            {fakeData.alleventsData[0].guide_steps?.map((step, idx) => (
-              <AccordionItem>
+            {data.steps?.map((step, idx) => (
+              <AccordionItem key={'step' + idx}>
                 <h3>
                   <AccordionButton px={2}>
                     <Box as='span' flex='1' textAlign='left'>
-                      {idx + 1 + '. ' + step.title}
+                      {idx + 1 + '. ' + step.name}
                     </Box>
                     <AccordionIcon />
                   </AccordionButton>
                 </h3>
-                <AccordionPanel px={3}>{step.description}</AccordionPanel>
+                <AccordionPanel px={3}>{step.details}</AccordionPanel>
               </AccordionItem>
             ))}
           </AccordionPanel>
@@ -55,7 +60,7 @@ const Description: React.FC<DescriptionProps> = ({ isSubscribed }) => {
             </AccordionButton>
           </h2>
           <AccordionPanel px={2}>
-            {fakeData.alleventsData[0].article?.map((paragraph, idx) => (
+            {data.example?.map((paragraph, idx) => (
               <Text key={idx}>{paragraph}</Text>
             ))}
           </AccordionPanel>

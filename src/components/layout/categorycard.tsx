@@ -3,32 +3,33 @@ import {
   Box,
   Image,
   Text,
-  Stack,
-  Button,
   useColorModeValue,
   VStack,
   HStack,
 } from '@chakra-ui/react';
 import { useRouter } from 'next/router';
+import { isEmpty } from 'lodash';
 
 type CardProps = {
+  category_id: string;
   title: string;
   img: string;
   description: string;
-  currentTopic: string;
+  currentTopic: string | false;
   isSubscribed: boolean;
-  onSubscribe: () => void;
-  onSeeAllTopics: () => void;
+  isLoading: boolean | string;
+  onSubscribe: (category_id: string) => void;
 };
 
 const CategryCard: React.FC<CardProps> = ({
+  category_id,
   title,
   img,
   description,
   currentTopic,
   isSubscribed,
+  isLoading,
   onSubscribe,
-  onSeeAllTopics,
 }) => {
   const router = useRouter();
 
@@ -53,13 +54,13 @@ const CategryCard: React.FC<CardProps> = ({
         align={'flex-start'}
       >
         <Image
-          src='/pictures/category.jpg'
+          src={isEmpty(img) ? '/pictures/category.jpg' : img}
           alt={`Image for ${title}`}
           w={'100px'}
           h={'100%'}
           objectFit='cover'
         />
-        <Box flex='1' display='flex' flexDirection='column'>
+        <Box flex='1' display='flex' flexDirection='column' minW={'235px'}>
           <Text
             fontSize='xl'
             fontWeight='semibold'
@@ -69,30 +70,37 @@ const CategryCard: React.FC<CardProps> = ({
             {title}
           </Text>
           <Text fontSize={'16px'}>{description}</Text>
-          <Text color={'#E65D27'} fontSize='sm' mb={'5px'}>
-            Latest: {currentTopic}
-          </Text>
+          {currentTopic && (
+            <Text color={'#E65D27'} fontSize='sm' mb={'5px'}>
+              Latest: {currentTopic}
+            </Text>
+          )}
         </Box>
       </HStack>
       <HStack justify={'space-around'} width={'100%'} height={'35px'}>
         <Box
           p={'5px'}
-          cursor={'pointer'}
+          cursor={isLoading ? 'loading' : 'pointer'}
           w={'50%'}
           textAlign={'center'}
           borderRight={'1px solid black'}
           boxSizing={'border-box'}
+          onClick={() => !isLoading && onSubscribe(category_id)}
         >
-          {isSubscribed ? 'unsubscribed' : 'Subscribe'}
+          {!!isLoading && isLoading == category_id
+            ? 'Loading'
+            : isSubscribed
+              ? 'unsubscribed'
+              : 'Subscribe'}
         </Box>
         <Box
           p={'5px'}
           cursor={'pointer'}
           w={'50%'}
           textAlign={'center'}
-          onClick={() => router.push('/app/writing/allevents/165344')}
+          onClick={() => router.push('/app/writing/alltopics/' + category_id)}
         >
-          See All Events
+          See All Topics
         </Box>
       </HStack>
     </VStack>

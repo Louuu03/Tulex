@@ -1,8 +1,9 @@
 // Slider.tsx
-import React from 'react';
+import React, { useState } from 'react';
 import {
   Box,
   Button,
+  Center,
   Flex,
   HStack,
   Text,
@@ -57,43 +58,52 @@ const Highlight: React.FC<HighlightProps> = ({ text, explanation }) => {
   );
 };
 const FeedbackBlock: React.FC<FeedbackBlockProps> = ({}) => {
+  const [isResult, setIsResult] = useState(false);
+
   return (
     <Box className='feedbackblock-container'>
-      <VStack>
-        <HStack width={'100%'} justify={'flex-end'} mb={2}>
-          <Text width='250px'>{fakeData.feedbackData.line}</Text>
-          <Flex
-            justify={'center'}
-            align={'center'}
-            width='70px'
-            h='70px'
-            borderRadius={'50%'}
-            bg={'gold'}
+      {isResult ? (
+        <VStack>
+          <HStack width={'100%'} justify={'flex-end'} mb={2}>
+            <Text width='250px'>{fakeData.feedbackData.line}</Text>
+            <Flex
+              justify={'center'}
+              align={'center'}
+              width='70px'
+              h='70px'
+              borderRadius={'50%'}
+              bg={'gold'}
+              fontWeight={'600'}
+              fontSize={'30px'}
+            >
+              {fakeData.feedbackData.rating}
+            </Flex>
+          </HStack>
+          <Box bg={'#eee3bac2'} p={2} borderRadius={'10px'} px={4}>
+            {fakeData.feedbackData.feedback}
+          </Box>
+          <Text
+            mt={2}
+            w={'100%'}
+            textAlign={'left'}
             fontWeight={'600'}
-            fontSize={'30px'}
+            fontSize={'20px'}
           >
-            {fakeData.feedbackData.rating}
-          </Flex>
-        </HStack>
-        <Box bg={'#eee3bac2'} p={2} borderRadius={'10px'} px={4}>
-          {fakeData.feedbackData.feedback}
-        </Box>
-        <Text
-          mt={2}
-          w={'100%'}
-          textAlign={'left'}
-          fontWeight={'600'}
-          fontSize={'20px'}
-        >
-          Optimal Article
-        </Text>
-        <Box px={2}>
-          <Article
-            text={fakeData.feedbackData.article}
-            highlights={fakeData.feedbackData.highlights}
-          />
-        </Box>
-      </VStack>
+            Optimal Article
+          </Text>
+          <Box px={2}>
+            <Article
+              text={fakeData.feedbackData.article}
+              highlights={fakeData.feedbackData.highlights}
+            />
+          </Box>
+        </VStack>
+      ) : (
+        <Center h={'200px'} flexDirection={'column'}>
+          <Text display={'block'}>GPT is right now checking it,</Text>
+          <Text display={'inline-block'}>please wait ....</Text>
+        </Center>
+      )}
     </Box>
   );
 };
