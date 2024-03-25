@@ -7,7 +7,7 @@ const fakeData = {
     {
       category: 'IELTS prep',
       topic: 'Opinion Essay on femenism and patriarchy',
-      level: 'B2',
+      level: 2,
       language: 'EN',
       streak: '3 week streak!',
       date: '12/28 18:00',
@@ -16,7 +16,7 @@ const fakeData = {
     {
       category: 'Grammar Focus',
       topic: 'Complex Sentences in English ',
-      level: 'B1',
+      level: 0,
       language: 'EN',
       streak: '2 week streak!',
       date: '12/29 17:00',
@@ -25,7 +25,7 @@ const fakeData = {
     {
       category: 'Social Topics',
       topic: 'Environmental Issues',
-      level: 'C1',
+      level: 3,
       language: 'EN',
       streak: '4 week streak!',
       date: '12/30 16:00',
@@ -34,7 +34,7 @@ const fakeData = {
     {
       category: 'Creative Writing',
       topic: 'Short Story',
-      level: 'B2',
+      level: 4,
       language: 'EN',
       streak: '1 week streak!',
       date: '12/31 15:00',
@@ -43,7 +43,7 @@ const fakeData = {
     {
       category: 'Business Writing',
       topic: 'Email Etiquette',
-      level: 'C1',
+      level: 5,
       language: 'EN',
       streak: '5 week streak!',
       date: '01/01 14:00',
@@ -52,7 +52,7 @@ const fakeData = {
     {
       category: 'Research Writing',
       topic: 'Citing Sources',
-      level: 'B2',
+      level: 6,
       language: 'EN',
       streak: '3 week streak!',
       date: '01/02 13:00',
