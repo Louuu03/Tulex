@@ -49,11 +49,12 @@ export default async function handler(
     const { db } = await connectToDatabase();
 
     const updates = bodyValidation.value;
-
+    let userData = updates;
+    userData.birthday=new Date(userData.birthday);
     try {
       let result = await db
         .collection('users')
-        .updateOne({ _id: userId }, { $set: updates });
+        .updateOne({ _id: userId }, { $set: userData });
 
       if (result.matchedCount === 0) {
         return res.status(404).json({ message: 'User not found', userId });
