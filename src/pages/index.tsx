@@ -17,6 +17,7 @@ import Link from 'next/link';
 import { Splide, SplideSlide } from '@splidejs/react-splide';
 import '@splidejs/splide/dist/css/splide.min.css';
 import { IoMenu, IoClose  } from "react-icons/io5";
+import { useRouter } from 'next/router';
 
 
 const Navbar = () => {
@@ -142,6 +143,7 @@ const LandingPage: React.FC = () => {
   const [scrollY, setScrollY] = useState(0);
   const [show, setShow] = useState(false);
   const { isOpen, onToggle } = useDisclosure();
+  const router = useRouter();
 
   const handleScroll = () => {
     setScrollY(window.scrollY);
@@ -340,8 +342,9 @@ const LandingPage: React.FC = () => {
               bg='black'
               transform={isLargerThan768?'rotate(-30deg)':'rotate(-65deg)'}
               position={'absolute'}
-              top='-150px'
-              right={'50px'}
+              top={isLargerThan768?'-250px':'-150px'}
+              right={isLargerThan768?'50px':''}
+              left={isLargerThan768?'':'250px'}
               zIndex={1}
             ></Box>
             <Box
@@ -351,7 +354,8 @@ const LandingPage: React.FC = () => {
               transform={isLargerThan768?'rotate(60deg)':'rotate(25deg)'}
               position={'absolute'}
               top={isLargerThan768?'100px':'400px'}
-              right={isLargerThan768?'700px':'400px'}
+              right={isLargerThan768?'700px':''}
+              left={isLargerThan768?'':'0'}
               zIndex={1}
             ></Box>
           </Box>
