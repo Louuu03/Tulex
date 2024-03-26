@@ -19,8 +19,8 @@ export const middleware = async (req: NextRequest, next: Function) => {
   };
 
   // Define cookie expiry times
-  const idTokenExpiry = new Date(Date.now() + 300 * 1000); // 5 minutes
-  const accessTokenExpiry = new Date(Date.now() + 300 * 1000); // 5 minutes
+  const idTokenExpiry = new Date(Date.now() + 3600 * 1000); // 1 hour
+  const accessTokenExpiry = new Date(Date.now() + 3600 * 1000); // 1 hour
   const userIdExpiry = new Date(Date.now() + 30 * 24 * 3600 * 1000); // 30 days
 
   const allCookies = {

@@ -57,8 +57,8 @@ export default async function handler(
   };
 
   // Set a reasonable expiry for each token
-  const idTokenExpiry = new Date(Date.now() + 300 * 1000); //  5 minutes
-  const accessTokenExpiry = new Date(Date.now() + 300 * 1000); //   5 minutes
+  const idTokenExpiry = new Date(Date.now() + 3600 * 1000); //  60 minutes
+  const accessTokenExpiry = new Date(Date.now() + 3600 * 1000); //   60 minutes
   const refreshTokenExpiry = new Date(Date.now() + 30 * 24 * 3600 * 1000); // 30 days
   const userIdExpiry = new Date(Date.now() + 30 * 24 * 3600 * 1000); // 30 days
 
