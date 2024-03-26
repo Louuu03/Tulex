@@ -28,6 +28,7 @@ export default async function handler(
   }
   const { idToken, accessToken, refreshToken, userId } = bodyValidation.value;
   // Check if the user existed
+  console.log("MongoDB Connection String:", process.env.MONGODB_URI); // Adjust the variable name as needed
 
   const { db } = await connectToDatabase();
 

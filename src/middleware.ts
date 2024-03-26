@@ -83,7 +83,6 @@ export const middleware = async (req: NextRequest, next: Function) => {
       });
     }
   };
-  console.log(req.nextUrl.pathname,req.nextUrl.pathname.startsWith('/api/auth/callback'))
   //APIS
   if(req.nextUrl.pathname.startsWith('/api/auth/callback')||req.nextUrl.pathname.startsWith('/app/auth/callback')){
     return res;
