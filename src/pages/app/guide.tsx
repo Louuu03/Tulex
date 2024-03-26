@@ -97,9 +97,9 @@ const GuidePage: React.FC = ({}) => {
   };
   const onSubmit: SubmitHandler<IFormInput> = data => {
     setIsLoading('submit');
-    let newData=data;
-    newData.birthday=DateTime.fromISO(data.birthday + 'T00:00').toString();
-    newData.createAt=DateTime.now().toString();;
+    let newData = data;
+    newData.birthday = DateTime.fromISO(data.birthday + 'T00:00').toString();
+    newData.createAt = DateTime.now().toString();
     axios
       .put('/api/guide?method=basic', newData)
       .then(response => {

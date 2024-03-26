@@ -29,11 +29,11 @@ export default async function handler(
         $addFields: {
           subscribedArray: {
             $cond: {
-              if: { $eq: [{ $type: "$subscribed" }, "array"] },
-              then: "$subscribed",
-              else: [] // Default to an empty array if not an array
-            }
-          }
+              if: { $eq: [{ $type: '$subscribed' }, 'array'] },
+              then: '$subscribed',
+              else: [], // Default to an empty array if not an array
+            },
+          },
         },
       },
       {
@@ -42,8 +42,7 @@ export default async function handler(
         },
       },
     ]);
-    const topics: Topic[] =
-      (await topicCursor.toArray()) as unknown as Topic[];
+    const topics: Topic[] = (await topicCursor.toArray()) as unknown as Topic[];
 
     if (topics.length === 0) {
       return res

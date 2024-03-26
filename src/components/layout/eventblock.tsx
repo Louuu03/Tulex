@@ -57,7 +57,8 @@ const EventBlock: React.FC<EventProps> = ({
 }) => {
   const router = useRouter();
   const conlorNum = Math.floor(Math.random() * 5) + 1;
-  const defaultColorSet = Math.floor(Math.random() * (colors.length - 2 + 1)) + 1;
+  const defaultColorSet =
+    Math.floor(Math.random() * (colors.length - 2 + 1)) + 1;
   return (
     <Flex
       className='eventblock'
@@ -75,7 +76,7 @@ const EventBlock: React.FC<EventProps> = ({
         w={'100%'}
         minW={'260px'}
         boxShadow={'10px 5px 5px #b0b0b0'}
-        bg={`${colors[colorSet||defaultColorSet][id ? (id > 5 ? id - 6 : id) : conlorNum]} !important`}
+        bg={`${colors[colorSet || defaultColorSet][id ? (id > 5 ? id - 6 : id) : conlorNum]} !important`}
         color={'white'}
       >
         <Text
@@ -134,4 +135,3 @@ const EventBlock: React.FC<EventProps> = ({
 };
 
 export default React.memo(EventBlock);
-

@@ -2,7 +2,6 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import { connectToDatabase } from '../../../lib/mongodbClient';
 import { DateTime } from 'luxon';
 
-
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse

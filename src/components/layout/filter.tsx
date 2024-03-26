@@ -47,7 +47,7 @@ const FiltersComponent: React.FC<FiltersComponentProps> = ({
   const [isLargerThan768] = useMediaQuery('(min-width: 768px)');
 
   useEffect(() => {
-    let newData:any = cloneDeep(data);
+    let newData: any = cloneDeep(data);
     if (
       type === 'topic' &&
       selectedLevel.length > 0 &&
@@ -112,7 +112,7 @@ const FiltersComponent: React.FC<FiltersComponentProps> = ({
 
   const renderSelect = (
     label: string,
-    options: { name: string; value: number|string }[],
+    options: { name: string; value: number | string }[],
     selectedValue: string,
     onChange: React.Dispatch<React.SetStateAction<string>>
   ) => (

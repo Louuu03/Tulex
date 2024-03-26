@@ -60,7 +60,7 @@ const NewsPage: React.FC = () => {
             {data?.news.author}
           </Text>
           <Text maxW='600px' fontSize={'16px'} mb={'20px'}>
-            { DateTime.fromISO(data.news.time).toLocal().toFormat('yyyy/MM/dd')}
+            {DateTime.fromISO(data.news.time).toLocal().toFormat('yyyy/MM/dd')}
           </Text>
           {data?.news.content.map((paragraph, index) => (
             <Text maxW='1200px' key={index} mt={'10px'}>

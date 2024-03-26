@@ -9,7 +9,7 @@ const basicUserSchema = Joi.object({
   country: Joi.string().required(),
   gender: Joi.string().required(),
   img: Joi.string().uri().optional(),
-  createAt:Joi.date().iso().required()
+  createAt: Joi.date().iso().required(),
 }).min(1); // Ensure at least one field is provided for update
 
 const languageUserSchema = Joi.array()
@@ -29,8 +29,10 @@ export default async function handler(
 
   if (req.method === 'GET') {
     const { db } = await connectToDatabase();
-    const user = await db.collection('users').findOne({ _id: userId as unknown as ObjectId  });
-    if (user&&user.birthday) {
+    const user = await db
+      .collection('users')
+      .findOne({ _id: userId as unknown as ObjectId });
+    if (user && user.birthday) {
       const cookieOptions = {
         secure: 'development',
       };
@@ -43,33 +45,32 @@ export default async function handler(
     return res.status(200).json({ message: 'Success' });
   }
 
-
   //update to db
 
-  if (userId &&req.method === 'PUT') {
+  if (userId && req.method === 'PUT') {
     const { db } = await connectToDatabase();
 
     const bodyValidation =
-    req.query.method === 'basic'
-      ? basicUserSchema.validate(req.body)
-      : languageUserSchema.validate(req.body);
-  if (bodyValidation.error) {
-    return res.status(400).json({
-      message: `Validation Error: ${bodyValidation.error.details.map(x => x.message).join(', ')}`,
-    });
-  }
+      req.query.method === 'basic'
+        ? basicUserSchema.validate(req.body)
+        : languageUserSchema.validate(req.body);
+    if (bodyValidation.error) {
+      return res.status(400).json({
+        message: `Validation Error: ${bodyValidation.error.details.map(x => x.message).join(', ')}`,
+      });
+    }
 
     const updates = bodyValidation.value;
     let userData = updates;
-    userData.birthday=new Date(userData.birthday);
-    userData.createAt=new Date(userData.createAt);
+    userData.birthday = new Date(userData.birthday);
+    userData.createAt = new Date(userData.createAt);
 
     try {
       let result;
       if (req.query.method === 'basic') {
         result = await db
           .collection('users')
-          .updateOne({ _id: userId  as unknown as ObjectId }, { $set: updates });
+          .updateOne({ _id: userId as unknown as ObjectId }, { $set: updates });
       } else {
         result = await db
           .collection('users')

@@ -25,7 +25,9 @@ export default async function handler(
   if (req.method === 'GET') {
     try {
       const { db } = await connectToDatabase();
-      const user = await db.collection('users').findOne({ _id: userId as unknown as ObjectId });
+      const user = await db
+        .collection('users')
+        .findOne({ _id: userId as unknown as ObjectId });
 
       return res.status(203).json({ message: 'Sucess', user });
     } catch (error) {
@@ -51,7 +53,7 @@ export default async function handler(
 
     const updates = bodyValidation.value;
     let userData = updates;
-    userData.birthday=new Date(userData.birthday);
+    userData.birthday = new Date(userData.birthday);
     try {
       let result = await db
         .collection('users')

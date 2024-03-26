@@ -59,10 +59,10 @@ const LoginPage: React.FC = () => {
 
   const handlePasswordVisibility = () => setShowPassword(!showPassword);
 
-  const handleLogin = async (type?:string, data?:any) => {
-    const emailData = type=='guest'?data?.email:email;
-    const passwordData = type=='guest'?data?.password:password;
-    if (!(isEmpty(email) && isEmpty(password))||type=='guest') {
+  const handleLogin = async (type?: string, data?: any) => {
+    const emailData = type == 'guest' ? data?.email : email;
+    const passwordData = type == 'guest' ? data?.password : password;
+    if (!(isEmpty(email) && isEmpty(password)) || type == 'guest') {
       //Lock the login button
       setIsLoading(true);
 
@@ -70,31 +70,31 @@ const LoginPage: React.FC = () => {
       await loginUser(emailData, passwordData)
         .then(response => {
           //setTokens
-          const {accessToken, refreshToken,idToken} = response;
+          const { accessToken, refreshToken, idToken } = response;
           const decoded = jwt.decode(idToken.jwtToken);
           axios
-          .post('/api/auth/callback', {
-            idToken:idToken.jwtToken,
-            accessToken:accessToken.jwtToken,
-            refreshToken:refreshToken.token,
-            userId:decoded?.sub,
-          })
-          .then(response => {
-            setIsLoading(false);
+            .post('/api/auth/callback', {
+              idToken: idToken.jwtToken,
+              accessToken: accessToken.jwtToken,
+              refreshToken: refreshToken.token,
+              userId: decoded?.sub,
+            })
+            .then(response => {
+              setIsLoading(false);
 
-            return response.status == 201
-              ? router.push('/app/guide')
-              : router.push('/app');
-          })
-          .catch(error => {
-            setIsLoading(false);
-            toast({
-              title: error.message,
-              status: 'error',
-              duration: 3000,
-              isClosable: true,
+              return response.status == 201
+                ? router.push('/app/guide')
+                : router.push('/app');
+            })
+            .catch(error => {
+              setIsLoading(false);
+              toast({
+                title: error.message,
+                status: 'error',
+                duration: 3000,
+                isClosable: true,
+              });
             });
-          })
         })
         .catch(error => {
           console.log(error);
@@ -301,7 +301,7 @@ const LoginPage: React.FC = () => {
           </Box>
           <Button
             className='loginBtn'
-            onClick={()=>handleLogin()}
+            onClick={() => handleLogin()}
             isDisabled={!!isInvalid.email || !!isInvalid.password || isLoading}
           >
             Login
@@ -314,11 +314,19 @@ const LoginPage: React.FC = () => {
           >
             Sign up
           </Button>
-          <Link textAlign='center' onClick={()=>{
-            setEmail('tulex.guest0@gmail.com');
-            setPassword('Abcd1234');
-            handleLogin('guest',{email:'tulex.guest0@gmail.com',password:'Abcd1234'});
-          }}>Log in as Guest</Link>
+          <Link
+            textAlign='center'
+            onClick={() => {
+              setEmail('tulex.guest0@gmail.com');
+              setPassword('Abcd1234');
+              handleLogin('guest', {
+                email: 'tulex.guest0@gmail.com',
+                password: 'Abcd1234',
+              });
+            }}
+          >
+            Log in as Guest
+          </Link>
           {!isLargerThan768 && (
             <VStack minW={'300px'} padding={'20px'}>
               <FacebookLoginButton size='40px' onClick={handleFacebookLogin} />

@@ -18,7 +18,7 @@ export default async function handler(
         $gt: new Date(),
       },
     });
-    const topics= await topicsCursor.toArray();
+    const topics = await topicsCursor.toArray();
     const articles = await db
       .collection('articles')
       .find({ user_id: userId, status: 0 })

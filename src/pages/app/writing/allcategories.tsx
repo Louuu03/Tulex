@@ -15,14 +15,20 @@ const AllCategoriesPage: React.FC = () => {
   const [isLargerThan768] = useMediaQuery('(min-width: 768px)');
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isCardLoading, setIsCardLoading] = useState<boolean | string>(false);
-  const [originalData, setOriginalData] = useState<{
-    category: Category[] | any;
-    userId: string | any;
-  }|any>();
-  const [data, setData] = useState<{
-    category: Category[] | any;
-    userId: string | any;
-  } |any >();
+  const [originalData, setOriginalData] = useState<
+    | {
+        category: Category[] | any;
+        userId: string | any;
+      }
+    | any
+  >();
+  const [data, setData] = useState<
+    | {
+        category: Category[] | any;
+        userId: string | any;
+      }
+    | any
+  >();
   const toast = useToast();
 
   const onSubscribe = (category_id: string, isSubscribed: boolean) => {
@@ -36,7 +42,7 @@ const AllCategoriesPage: React.FC = () => {
           const categoryIndex = newCategory.findIndex(
             c => c._id === category_id
           );
-          if (isSubscribed&&data) {
+          if (isSubscribed && data) {
             newCategory[categoryIndex].subscribed.splice(
               newCategory[categoryIndex].subscribed.indexOf(data.userId),
               1
@@ -44,7 +50,7 @@ const AllCategoriesPage: React.FC = () => {
           } else {
             !newCategory[categoryIndex].subscribed &&
               (newCategory[categoryIndex].subscribed = []);
-            data&&newCategory[categoryIndex].subscribed.push(data.userId);
+            data && newCategory[categoryIndex].subscribed.push(data.userId);
           }
           setOriginalData({ ...originalData, category: newCategory });
           setData({ ...data, category: newCategory });
@@ -97,7 +103,7 @@ const AllCategoriesPage: React.FC = () => {
   return isLoading ? (
     <FullPageLoader />
   ) : (
-    data&&originalData && (
+    data && originalData && (
       <VStack align='center' className='allcategories-container'>
         <VStack className={`main-container ${isLargerThan768 ? '' : 'phone'}`}>
           <FiltersComponent

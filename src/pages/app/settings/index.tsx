@@ -129,7 +129,13 @@ const SettingPage: React.FC = () => {
           </ModalBody>
 
           <ModalFooter>
-            <Button colorScheme='blue' mr={3} onClick={()=>{isString(isOpen)&&onsubmit(isOpen)}}>
+            <Button
+              colorScheme='blue'
+              mr={3}
+              onClick={() => {
+                isString(isOpen) && onsubmit(isOpen);
+              }}
+            >
               {isOpen === 'suggestion' ? 'Send' : 'Yes'}
             </Button>
             <Button onClick={onClose}> Close </Button>

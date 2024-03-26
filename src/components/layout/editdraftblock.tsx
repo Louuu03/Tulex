@@ -132,10 +132,14 @@ const EditDraftBlock: React.FC<EditDraftBlockProps> = ({
 
   //Get Local Storage to content
   useEffect(() => {
-    let savedContent:any = localStorage.getItem('articleContent_' + article._id);
+    let savedContent: any = localStorage.getItem(
+      'articleContent_' + article._id
+    );
     savedContent && (savedContent = JSON.parse(savedContent));
-    let newArticle=article
-    newArticle.last_save=DateTime.fromISO(article.last_save).toLocal().toFormat('yyyy-MM-dd')
+    let newArticle = article;
+    newArticle.last_save = DateTime.fromISO(article.last_save)
+      .toLocal()
+      .toFormat('yyyy-MM-dd');
     if (savedContent) {
       setArticle({ ...newArticle, content: savedContent.content });
       setContent(savedContent.content);

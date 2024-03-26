@@ -3,7 +3,6 @@ import { connectToDatabase } from '../../../../lib/mongodbClient';
 import { DateTime } from 'luxon';
 import { Article } from '@/utils/common-type';
 
-
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
@@ -24,8 +23,7 @@ export default async function handler(
       status: 0,
       user_id: userId,
     });
-    const articles =
-      (await articleCursor.toArray());
+    const articles = await articleCursor.toArray();
 
     if (articles.length === 0) {
       return res

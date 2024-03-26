@@ -10,26 +10,26 @@ import { useRouter } from 'next/router';
 interface SliderProps {
   events: Array<{
     category_name?: string;
-  name: string;
-  level: number;
-  language: string;
-  streak?: string;
-  endtime: string | Date;
-  statTag?: string;
-  isSmall?: boolean;
-  isSubscribed?: boolean;
-  _id: string | number;
-  isSingle?: boolean;
-  clickable?: boolean;
-  isTag?: boolean;
-  topic_id?: string;
-  id?: number;
-  colorSet?: number;
+    name: string;
+    level: number;
+    language: string;
+    streak?: string;
+    endtime: string | Date;
+    statTag?: string;
+    isSmall?: boolean;
+    isSubscribed?: boolean;
+    _id: string | number;
+    isSingle?: boolean;
+    clickable?: boolean;
+    isTag?: boolean;
+    topic_id?: string;
+    id?: number;
+    colorSet?: number;
   }>;
   link: string;
 }
 
-const Slider: React.FC<SliderProps|any> = ({ events, link }) => {
+const Slider: React.FC<SliderProps | any> = ({ events, link }) => {
   const router = useRouter();
   const SliderColorSet = Math.floor(Math.random() * 9) + 1;
   return (

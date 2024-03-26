@@ -43,9 +43,9 @@ import { Category, Topic } from '@/utils/common-type';
 
 interface CategoryFormProps {
   categoryData: Category;
-  setCategoryData: React.Dispatch<React.SetStateAction<Category>>;  
+  setCategoryData: React.Dispatch<React.SetStateAction<Category>>;
 }
-const initialCategoryData: Category|any = {
+const initialCategoryData: Category | any = {
   name: '',
   short: '',
   long: '',
@@ -54,7 +54,7 @@ const initialCategoryData: Category|any = {
   create_time: DateTime.now().toFormat('yyyy-MM-dd'),
 };
 
-const initialTopicData: Topic |any = {
+const initialTopicData: Topic | any = {
   name: '',
   create_time: DateTime.now().toFormat('yyyy-MM-dd'),
   description: '',
@@ -83,7 +83,7 @@ const CategoryForm: React.FC<CategoryFormProps | any> = ({
   const [data, setData] = useState<Category>(categoryData);
   const [isDelete, setIsDelete] = useState<boolean>(false);
   const toast = useToast();
-  const lang:string[] = [];
+  const lang: string[] = [];
   data.language.forEach(l => {
     lang.push(en.abbLang[l]?.name);
   });
@@ -178,7 +178,9 @@ const CategoryForm: React.FC<CategoryFormProps | any> = ({
           type='date'
           name='create_time'
           defaultValue={data.create_time as unknown as string}
-          onChange={e => setData({ ...data, create_time: e.target.value as unknown as Date })}
+          onChange={e =>
+            setData({ ...data, create_time: e.target.value as unknown as Date })
+          }
         />
       </FormControl>
       <FormControl isRequired mb={4}>
@@ -259,7 +261,7 @@ const CategoryForm: React.FC<CategoryFormProps | any> = ({
     </Box>
   );
 };
-const TopicForm: React.FC<TopicFormProps|any> = ({
+const TopicForm: React.FC<TopicFormProps | any> = ({
   categoryData,
   topicData,
   onClose,
@@ -269,12 +271,12 @@ const TopicForm: React.FC<TopicFormProps|any> = ({
   setNewData,
 }) => {
   const toast = useToast();
-  const [data, setData] = useState<Topic|any>(topicData);
+  const [data, setData] = useState<Topic | any>(topicData);
   const [categoryValue, setCategoryValue] = useState<
     { name: string; id: string }[]
   >([]);
   const [langOption, setLangOption] = useState<
-    { name: string; value: number }[]|any
+    { name: string; value: number }[] | any
   >([]);
   const [isDelete, setIsDelete] = useState<boolean>(false);
 
@@ -312,13 +314,16 @@ const TopicForm: React.FC<TopicFormProps|any> = ({
     }
   };
   const changeCategory = v => {
-    let newOptions:{name:string, value:string}[] = [];
+    let newOptions: { name: string; value: string }[] = [];
     let categoryName;
     categoryData.map(category => {
       category._id === v && (categoryName = category.name);
       category._id === v &&
         category.language.forEach(l => {
-          newOptions.push({ name: en.options.language[l].name, value: l as string });
+          newOptions.push({
+            name: en.options.language[l].name,
+            value: l as string,
+          });
         });
     });
     setLangOption(newOptions);
@@ -423,10 +428,13 @@ const TopicForm: React.FC<TopicFormProps|any> = ({
   };
 
   useEffect(() => {
-    let newOptions:{name:string, value:string}[] = [];
-    let categoryOptions: {name:string, id:string}[] = [];
+    let newOptions: { name: string; value: string }[] = [];
+    let categoryOptions: { name: string; id: string }[] = [];
     categoryData[0].language.forEach(l => {
-      newOptions.push({ name: en.options.language[l].name, value: l as string });
+      newOptions.push({
+        name: en.options.language[l].name,
+        value: l as string,
+      });
     });
     categoryData.map(category => {
       categoryOptions.push({ name: category.name, id: category._id });
@@ -604,7 +612,7 @@ const CategoryPage: React.FC<any> = ({ categoryData, setIsOpen, setData }) => {
   return (
     <Accordion allowToggle={true} w={'100%'}>
       {categoryData.map((category, idx) => {
-        let lang:string[] = [];
+        let lang: string[] = [];
         category.language.forEach(l => {
           lang.push(en.abbLang[l].name);
         });
@@ -760,32 +768,29 @@ const AdminWritingPage: React.FC = () => {
   );
   const [categoryData, setCategoryData] = useState<Category[] | any>(null);
   const [topicData, setTopicData] = useState<Topic[] | any>(null);
-  const [openData, setOpenData] = useState<Category | Topic | null>(
-    null
-  );
+  const [openData, setOpenData] = useState<Category | Topic | null>(null);
   const [originalData, setOriginalData] = useState<{
     topics: Topic[] | null;
     categories: Category[] | null;
-  }|null>(null);
+  } | null>(null);
 
   const router = useRouter();
 
   const setAllData = (value: Category | Topic, type, mode) => {
     if (mode !== 'delete') {
-      const newData = (type === 'category' ? categoryData : topicData)?.map(
-        item => {
+      const newData =
+        (type === 'category' ? categoryData : topicData)?.map(item => {
           if (item._id === value._id) {
             // Found the matching object, return a new object with the updated name
             return value;
           }
           // Not the object we're looking for, return it unchanged
           return item;
-        }
-      )||[];
+        }) || [];
       mode === 'add' && newData.push(value);
       type === 'category' ? setCategoryData(newData) : setTopicData(newData);
     } else {
-      let newData:any[] = [];
+      let newData: any[] = [];
       (type === 'category' ? categoryData : topicData)?.map(item => {
         if (item._id !== value._id) {
           return newData.push(item);
@@ -804,7 +809,7 @@ const AdminWritingPage: React.FC = () => {
   };
 
   useEffect(() => {
-    let Datas:{categories:Category[], topics:Topic[]}|any = {};
+    let Datas: { categories: Category[]; topics: Topic[] } | any = {};
     axios
       .get('/api/admin/writing/category')
       .then(res => {
@@ -865,7 +870,7 @@ const AdminWritingPage: React.FC = () => {
                     type={'category'}
                     data={originalData.categories}
                     setData={v => setCategoryData(v)}
-                    visibleFilters={[ 'status', 'language']}
+                    visibleFilters={['status', 'language']}
                   />
                   <HStack>
                     <Button

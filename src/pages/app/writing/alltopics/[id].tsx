@@ -37,7 +37,7 @@ const AllEventsPage: NextPage<AllEventsPageProps> = ({ categoryId }) => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [originalData, setOriginalData] = useState<{
     topics: Topic[] | null;
-  }|null>(null);
+  } | null>(null);
   const [data, setData] = useState<{
     topics: Topic[] | any;
     category: Category;
@@ -78,7 +78,7 @@ const AllEventsPage: NextPage<AllEventsPageProps> = ({ categoryId }) => {
   return isLoading ? (
     <FullPageLoader />
   ) : (
-    originalData&&data&&data.category && (
+    originalData && data && data.category && (
       <VStack align='center' className='allevents-container'>
         <VStack className={`main-container ${isLargerThan768 ? '' : 'phone'}`}>
           <Box

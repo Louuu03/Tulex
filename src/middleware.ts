@@ -8,9 +8,11 @@ export const middleware = async (req: NextRequest, next: Function) => {
   let idToken = req.cookies.get('idToken')?.value;
   let accessToken = req.cookies.get('accessToken')?.value;
   let refreshToken = req.cookies.get('refreshToken')?.value;
-  let userId :string | (() => string)= req.cookies.get('userId')?.value as string;
-  let isNewUser:boolean |string = req.cookies.get('isNewUser')?.value as string;
-  let resetHeaders:string[] = [];
+  let userId: string | (() => string) = req.cookies.get('userId')
+    ?.value as string;
+  let isNewUser: boolean | string = req.cookies.get('isNewUser')
+    ?.value as string;
+  let resetHeaders: string[] = [];
   const res = NextResponse.next();
 
   // set headers
@@ -83,7 +85,10 @@ export const middleware = async (req: NextRequest, next: Function) => {
   };
 
   //APIS
-  if (req.nextUrl.pathname.startsWith('/api')&&req.nextUrl.pathname!=='/api/auth/callback') {
+  if (
+    req.nextUrl.pathname.startsWith('/api') &&
+    req.nextUrl.pathname !== '/api/auth/callback'
+  ) {
     console.log('api');
     try {
       // Verify access token
@@ -93,7 +98,7 @@ export const middleware = async (req: NextRequest, next: Function) => {
           accessToken = newTokens.access_token;
           idToken = newTokens.id_token;
           const decoded = jwt.decode(idToken);
-          userId =  decoded?.sub as string; // Assuming 'sub' is your user identifier
+          userId = decoded?.sub as string; // Assuming 'sub' is your user identifier
           resetHeaders.push('idToken', 'accessToken', 'userId', 'isNewUser');
         } else {
           // If no refreshToken, redirect to login

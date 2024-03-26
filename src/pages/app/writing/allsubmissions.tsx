@@ -44,7 +44,7 @@ const AllSubmissionPage: NextPage = () => {
   return isLoading ? (
     <FullPageLoader />
   ) : (
-    data&& originalData && (
+    data && originalData && (
       <VStack align='center' className='allsubmission-container'>
         <VStack className={`main-container ${isLargerThan768 ? '' : 'phone'}`}>
           {/* <FiltersComponent visibleFilters={['level', 'language']} /> */}

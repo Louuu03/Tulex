@@ -49,7 +49,8 @@ export default async function handler(
       const userId = req.cookies.userId;
       const { db } = await connectToDatabase();
       const CategoryCursor = await db.collection('categories').find({});
-      const category: Category[] = await CategoryCursor.toArray() as Category[];
+      const category: Category[] =
+        (await CategoryCursor.toArray()) as Category[];
       if (category.length === 0) {
         return res.status(200).json({ message: 'No category found' });
       } else {

@@ -3,14 +3,12 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import { connectToDatabase } from '../../../../lib/mongodbClient';
 import Joi from 'joi';
 
-
 const callbackSchema = Joi.object({
   idToken: Joi.string().required(),
   accessToken: Joi.string().required(),
   refreshToken: Joi.string().required(),
-  userId: Joi.string().required()
-  }).required();
-
+  userId: Joi.string().required(),
+}).required();
 
 export default async function handler(
   req: NextApiRequest,

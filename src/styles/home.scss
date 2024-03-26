@@ -1,17 +1,16 @@
 .LandingPage-container {
-    .writing-container {
-        &:hover {
-            .title-container {
-                display: none;
-            }
-            .text-container {
-                display: block;
-            }
-            
-        }
+  .writing-container {
+    &:hover {
+      .title-container {
+        display: none;
+      }
+      .text-container {
+        display: block;
+      }
     }
-    .splide__slide  {
-        display: flex;
-        justify-content: center;
-    }    
+  }
+  .splide__slide {
+    display: flex;
+    justify-content: center;
+  }
 }

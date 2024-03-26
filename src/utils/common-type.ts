@@ -62,7 +62,7 @@ import { ObjectId } from 'mongodb';
  *
  * - Get Time Now and send to backend directly:
  * let timenow = DateTime.now().toString();
- * 
+ *
  * - send to backend
  * let tobe=DateTime.fromISO(dateInputValue + 'T00:00').toSting();
  *
@@ -82,12 +82,12 @@ interface Category {
   status: number; // as en.status
   language: string[]; // as en.options.language
   subscribed: string[]; // user_id array
-  img:string;
+  img: string;
 }
 interface TopicInCategory {
-    topic_id: string;
-    name: string;
-    create_time: Date;
+  topic_id: string;
+  name: string;
+  create_time: Date;
 }
 
 //topics
@@ -147,25 +147,25 @@ interface Article {
   status: number;
 }
 interface Feedback {
-    rating: number;
-    comment: string;
-    suggestion: string;
-    article: string;
-    highlights: Highlight[];
+  rating: number;
+  comment: string;
+  suggestion: string;
+  article: string;
+  highlights: Highlight[];
 }
 interface Highlight {
-    word: string;
-    explanation: string;
+  word: string;
+  explanation: string;
 }
 
 //news
 interface News {
   _id: ObjectId;
   title: string;
-  time:Date;
-  author:string;
-  content:string[];
-  status:number;
+  time: Date;
+  author: string;
+  content: string[];
+  status: number;
 }
 //suggestions
 interface Suggestion {
@@ -175,5 +175,13 @@ interface Suggestion {
   createdAt: Date;
 }
 
-
-export type { Category,Topic, Step, User, Learning, Article , News, Suggestion };
+export type {
+  Category,
+  Topic,
+  Step,
+  User,
+  Learning,
+  Article,
+  News,
+  Suggestion,
+};

@@ -45,7 +45,9 @@ const UserPage: React.FC = () => {
     setIsLoading('update');
     let userData = data;
     userData.img = '';
-    userData.birthday=DateTime.fromISO(userData.birthday + 'T00:00').toString();
+    userData.birthday = DateTime.fromISO(
+      userData.birthday + 'T00:00'
+    ).toString();
     !isEditing
       ? setEditing(true)
       : axios

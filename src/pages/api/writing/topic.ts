@@ -198,14 +198,14 @@ export default async function handler(
             return res.status(202).json({
               message: 'Subscribed successfully.',
               article: newData,
-              userId
+              userId,
             });
           } else {
             return res.status(200).json({
               message: 'You are already subscribed or the topic was not found.',
             });
           }
-        // Unsubscribe user
+          // Unsubscribe user
         } else if (status === 1) {
           const unsubscribeResult = await db.collection('topics').updateOne(
             { _id: new ObjectId(topicId) },
@@ -217,7 +217,7 @@ export default async function handler(
           return res.status(203).json({
             message: 'Unsubscribed successfully',
             result: unsubscribeResult,
-            userId
+            userId,
           });
         }
       } catch (error) {

@@ -31,13 +31,13 @@ import { DateTime } from 'luxon';
 import { Article, Topic } from '@/utils/common-type';
 
 interface DataType {
-  article?: Article|any;
+  article?: Article | any;
   topic?: Topic;
   userId?: string;
 }
 
 interface AllEventsPageProps {
-  eventId: {id:string};
+  eventId: { id: string };
 }
 
 export const getServerSideProps: GetServerSideProps = async context => {
@@ -50,7 +50,6 @@ export const getServerSideProps: GetServerSideProps = async context => {
 };
 
 const TopicPage: NextPage<AllEventsPageProps> = ({ eventId }) => {
-
   const [isLargerThan768] = useMediaQuery('(min-width: 768px)');
   const [isSubscribed, setIsSubscribed] = useState<boolean>(false);
   const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
@@ -74,88 +73,92 @@ const TopicPage: NextPage<AllEventsPageProps> = ({ eventId }) => {
     //Res 200: already subscribed
     //Res 202: subscribed and added a new article
     //Res 203: unsubscribed
-    data&&axios
-      .put(`/api/writing/topic?id=${eventId.id}&method=subscribe`, {
-        status: isSubscribed ? 1 : 0,
-        topic: data?.topic,
-      })
-      .then(res => {
-        let newtopic: Topic = data.topic as Topic;
-        let newArticle: Article;
-        if (res.status === 202) {
-          if(newtopic.subscribed){
-            newtopic.subscribed.push(res.data.userId);
-          }else{
-            newtopic.subscribed=[res.data.userId];
+    data &&
+      axios
+        .put(`/api/writing/topic?id=${eventId.id}&method=subscribe`, {
+          status: isSubscribed ? 1 : 0,
+          topic: data?.topic,
+        })
+        .then(res => {
+          let newtopic: Topic = data.topic as Topic;
+          let newArticle: Article;
+          if (res.status === 202) {
+            if (newtopic.subscribed) {
+              newtopic.subscribed.push(res.data.userId);
+            } else {
+              newtopic.subscribed = [res.data.userId];
+            }
+            newArticle = res.data.article;
+            newArticle.last_save = DateTime.fromISO(res.data.article.last_save)
+              .toLocal()
+              .toFormat('yyyy/MM/dd hh:mm:ss a');
+            setData({ ...data, article: newArticle, topic: newtopic });
+          } else if (res.status === 203) {
+            if (newtopic.subscribed) {
+              newtopic.subscribed = newtopic.subscribed.filter(
+                id => id !== data.userId
+              );
+            }
+            setData({ topic: newtopic });
           }
-          newArticle = res.data.article;
-          newArticle.last_save = DateTime.fromISO(res.data.article.last_save).toLocal().toFormat('yyyy/MM/dd hh:mm:ss a');
-          setData({ ...data, article: newArticle, topic: newtopic });
-        }else if(res.status === 203){
-          if(newtopic.subscribed){
-            newtopic.subscribed = newtopic.subscribed.filter(
-            id => id !== data.userId
-          );
-          }
-          setData({topic:newtopic})
-        }
-        setIsSubscribed(!isSubscribed);
-        setIsLoading(false);
-        toast({
-          title: 'Subscription updated successfully',
-          status: 'success',
-          duration: 3000,
-          isClosable: true,
+          setIsSubscribed(!isSubscribed);
+          setIsLoading(false);
+          toast({
+            title: 'Subscription updated successfully',
+            status: 'success',
+            duration: 3000,
+            isClosable: true,
+          });
+        })
+        .catch(err => {
+          setIsLoading(false);
+          console.log(err);
+          toast({
+            title: 'An unexpected error occurred',
+            status: 'error',
+            duration: 3000,
+            isClosable: true,
+          });
+          refreshPage();
         });
-      })
-      .catch(err => {
-        setIsLoading(false);
-        console.log(err);
-        toast({
-          title: 'An unexpected error occurred',
-          status: 'error',
-          duration: 3000,
-          isClosable: true,
-        });
-        refreshPage();
-      });
   };
   const onSubmit = () => {
     setIsLoading('submit');
-    data?.article&&axios
-      .put(`/api/writing/topic?id=${data?.article._id}&method=submit`, {
-        content: data?.article.content,
-      })
-      .then(res => {
-        setIsSubmitted(true);
-        setIsLoading(false);
-        setData({
-          ...data,
-          article: {
-            ...data.article,
-            status: 1,
-            last_save: DateTime.now().toFormat('yyyy-MM-dd hh:mm:ss a'),
-          },
+    data?.article &&
+      axios
+        .put(`/api/writing/topic?id=${data?.article._id}&method=submit`, {
+          content: data?.article.content,
+        })
+        .then(res => {
+          setIsSubmitted(true);
+          setIsLoading(false);
+          setData({
+            ...data,
+            article: {
+              ...data.article,
+              status: 1,
+              last_save: DateTime.now().toFormat('yyyy-MM-dd hh:mm:ss a'),
+            },
+          });
+          setIsOpen(false);
+          toast({
+            title: 'Submitted successfully',
+            status: 'success',
+            duration: 3000,
+            isClosable: true,
+          });
+        })
+        .catch(err => {
+          setIsLoading(false);
+          console.log(err);
+          toast({
+            title: 'An unexpected error occurred',
+            status: 'error',
+            duration: 3000,
+            isClosable: true,
+          });
+          refreshPage();
         });
-        setIsOpen(false);
-        toast({
-          title: 'Submitted successfully',
-          status: 'success',
-          duration: 3000,
-          isClosable: true,
-        });
-      })
-      .catch(err => {
-        setIsLoading(false);
-        console.log(err);
-        toast({
-          title: 'An unexpected error occurred',
-          status: 'error',
-          duration: 3000,
-          isClosable: true,
-        });
-        refreshPage();
-      });
   };
   useEffect(() => {
     setIsLoading('main');
@@ -248,7 +251,7 @@ const TopicPage: NextPage<AllEventsPageProps> = ({ eventId }) => {
                 {data && <Description data={data.topic} isSubscribed={false} />}
               </TabPanel>
               <TabPanel>
-                {data&&data.article && (
+                {data && data.article && (
                   <EditDraftBlock
                     article={data.article}
                     setArticle={v => setData({ ...data, article: v })}
