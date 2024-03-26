@@ -12,7 +12,7 @@ function MyApp({ Component, pageProps }: AppProps) {
     <ChakraProvider>
       <Head>
         <title>Tulex </title>
-        <link rel='icon' href='/pictures/icon.webp' type='image/webp' />
+        <link rel='icon' href='public/pictures/Icon.webp' type='image/webp' />
         <meta
           name='description'
           content='Join Tulex, the ultimate platform for language learners. Engage in themed writing challenges and real-time speaking exchanges to improve your skills. With feedback, leaderboards, and diverse content powered by the ChatGPT API, Tulex offers a unique blend of learning, competition, and social interaction. Start your language journey with Tulex today!'
