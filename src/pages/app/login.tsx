@@ -59,14 +59,16 @@ const LoginPage: React.FC = () => {
 
   const handlePasswordVisibility = () => setShowPassword(!showPassword);
 
-  const handleLogin = async () => {
-    if (!(isEmpty(email) && isEmpty(password))) {
+  const handleLogin = async (type?:string, data?:any) => {
+    const emailData = type=='guest'?data?.email:email;
+    const passwordData = type=='guest'?data?.password:password;
+    if (!(isEmpty(email) && isEmpty(password))||type=='guest') {
       //Lock the login button
       setIsLoading(true);
+
       //Login the user
-      await loginUser(email, password)
+      await loginUser(emailData, passwordData)
         .then(response => {
-          setIsLoading(false);
           //setTokens
           const {accessToken, refreshToken,idToken} = response;
           const decoded = jwt.decode(idToken.jwtToken);
@@ -78,11 +80,14 @@ const LoginPage: React.FC = () => {
             userId:decoded?.sub,
           })
           .then(response => {
+            setIsLoading(false);
+
             return response.status == 201
               ? router.push('/app/guide')
               : router.push('/app');
           })
           .catch(error => {
+            setIsLoading(false);
             toast({
               title: error.message,
               status: 'error',
@@ -296,7 +301,7 @@ const LoginPage: React.FC = () => {
           </Box>
           <Button
             className='loginBtn'
-            onClick={handleLogin}
+            onClick={()=>handleLogin()}
             isDisabled={!!isInvalid.email || !!isInvalid.password || isLoading}
           >
             Login
@@ -312,7 +317,7 @@ const LoginPage: React.FC = () => {
           <Link textAlign='center' onClick={()=>{
             setEmail('tulex.guest0@gmail.com');
             setPassword('Abcd1234');
-            handleLogin();
+            handleLogin('guest',{email:'tulex.guest0@gmail.com',password:'Abcd1234'});
           }}>Log in as Guest</Link>
           {!isLargerThan768 && (
             <VStack minW={'300px'} padding={'20px'}>
