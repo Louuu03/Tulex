@@ -5,10 +5,19 @@ import '../styles/globals.scss';
 import HeaderComponent from '@/components/commmon/header';
 import Navbar from '@/components/commmon/navbar';
 import fakedata from '@/utils/fakedata';
+import Head from 'next/head'; 
+
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
     <ChakraProvider>
+      <Head>
+        <title>Tulex </title>
+        
+        <link rel="icon" href="/pictures/icon.jpeg" />
+        
+      </Head>
+      
           <HeaderComponent
             userName={fakedata.currentUser.name}
             userImage={fakedata.currentUser.image}
