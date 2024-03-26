@@ -83,11 +83,13 @@ export const middleware = async (req: NextRequest, next: Function) => {
       });
     }
   };
-
+  console.log(req.nextUrl.pathname,req.nextUrl.pathname.startsWith('/api/auth/callback'))
   //APIS
-  if (
-    req.nextUrl.pathname.startsWith('/api') &&
-    req.nextUrl.pathname !== '/api/auth/callback'
+  if(req.nextUrl.pathname.startsWith('/api/auth/callback')||req.nextUrl.pathname.startsWith('/app/auth/callback')){
+    return res;
+  }
+  else if (
+    req.nextUrl.pathname.startsWith('/api')
   ) {
     console.log('api');
     try {
@@ -126,8 +128,7 @@ export const middleware = async (req: NextRequest, next: Function) => {
   }
 
   //APPS
-  if (req.nextUrl.pathname === '/app/login') {
-    console.log('login');
+  else if (req.nextUrl.pathname === '/app/login') {
     try {
       if (!accessToken || !(await verifyToken(accessToken))) {
         //If have refreshToken and success to get new tokens
@@ -207,7 +208,7 @@ export const middleware = async (req: NextRequest, next: Function) => {
     } catch (error) {
       console.error(error);
       return Response.json(
-        { success: false, message: 'Internal Server Error' },
+        { success: false, message: 'Internal Server Error', error: error.message },
         { status: 500 }
       );
     }

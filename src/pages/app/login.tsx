@@ -88,6 +88,7 @@ const LoginPage: React.FC = () => {
             })
             .catch(error => {
               setIsLoading(false);
+              console.log(error);
               toast({
                 title: error.message,
                 status: 'error',
