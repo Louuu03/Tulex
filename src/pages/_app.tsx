@@ -14,7 +14,7 @@ function MyApp({ Component, pageProps }: AppProps) {
       <Head>
         <title>Tulex </title>
         
-        <link rel="icon" href="/pictures/icon.jpeg" />
+        <link rel="icon" href="/pictures/icon.webp" />
         
       </Head>
       

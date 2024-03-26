@@ -302,15 +302,16 @@ const LandingPage: React.FC = () => {
                 (x, y) => `translate3d(${x}px,${y}px,0) rotate(-30deg)`
               ),
               position:'absolute',
-              top:'130px',
-              right:'-60px',
+              top:'200px',
+              right:'200px',
               zIndex:100
             }}
           >
             <Image
-              src='/pictures/main.png'
+              src='/pictures/main.webp'
               alt='Dynamic Image'
-              w='700px'
+              w='200px'
+              h='430px'
               
             />
           </animated.div>:
@@ -321,15 +322,16 @@ const LandingPage: React.FC = () => {
               (x, y) => `translate3d(${x}px,${y}px,0) rotate(25deg)`
             ),
             position:'absolute',
-            top:'75px',
-            left:'-180px',
+            top:'140px',
+            left:'-15px',
             zIndex:100
           }}
         >
           <Image
-            src='/pictures/main.png'
+            src='/pictures/main.webp'
             alt='Dynamic Image'
-            w='450px'
+            w='100px'
+            h='215px'
             
           />
         </animated.div>}
@@ -445,14 +447,14 @@ const LandingPage: React.FC = () => {
             </Box>
            {isLargerThan768&& <HStack wrap={'wrap'} w={isLargerThan1300?'520px' :"260px"} h={isLargerThan1300?'360px' :"520px"}>
               <Image
-                src='/pictures/Guide2.jpg'
+                src='/pictures/Guide2.webp'
                 alt='Guide'
                 width={'250px'}
                 h={isLargerThan1300?'350px':'250px'}
                 objectFit={'cover'}
               />
               <Image
-                src='/pictures/Guide1.jpg'
+                src='/pictures/Guide1.webp'
                 alt='Guide'
                 width={'250px'}
                 h={isLargerThan1300?'350px':'250px'}
@@ -464,14 +466,14 @@ const LandingPage: React.FC = () => {
           </HStack>
           {!isLargerThan768&& <HStack wrap={'wrap'} w={'100%'} justify={'center'} mt='10px'>
               <Image
-                src='/pictures/Guide2.jpg'
+                src='/pictures/Guide2.webp'
                 alt='Guide'
                 width={'180px'}
                 h='200px'
                 objectFit={'cover'}
               />
               <Image
-                src='/pictures/Guide1.jpg'
+                src='/pictures/Guide1.webp'
                 alt='Guide'
                 width={'180px'}
                 h='200px'
@@ -489,7 +491,7 @@ const LandingPage: React.FC = () => {
             borderRadius={'10px'}
           >
             <VStack mt={'-100px'}>
-              <Image src='/pictures/paper.png' alt='Writing' width={'60px'} />
+              <Image src='/pictures/paper.webp' alt='Writing' width={'60px'} height={'60px'} />
               <Text
                 as='h4'
                 fontSize={'40px'}
@@ -514,7 +516,7 @@ const LandingPage: React.FC = () => {
                 w={'100%'}
               >
                 <Image
-                  src='/pictures/theme.jpg'
+                  src='/pictures/theme.webp'
                   alt='Writing'
                   h={'350px'}
                   objectFit={'cover'}
@@ -566,7 +568,7 @@ Elevate your language skills with Tulex&apos;s Themed Writing Challenges. From G
                 w={'100%'}
               >
                 <Image
-                  src='/pictures/mentor.jpg'
+                  src='/pictures/mentor.webp'
                   alt='Writing'
                   h={'350px'}
                   objectFit={'cover'}
@@ -615,7 +617,7 @@ Elevate your language skills with Tulex&apos;s Themed Writing Challenges. From G
             width={'100%'}
           >
             <Image
-              src='/pictures/map.jpg'
+              src='/pictures/map.webp'
               alt='Speaking'
               position={'relative'}
               width={'100vw'}
@@ -656,9 +658,10 @@ Elevate your language skills with Tulex&apos;s Themed Writing Challenges. From G
                     p='20px'
                   >
                     <Image
-                      src='/pictures/Choose.png'
-                      alt='Speaker'
-                      width={'200px'}
+                      src='/pictures/Choose.webp'
+                      alt='choose'
+                      width={'80px'}
+                      height={'60px'}
                     />
                   </Center>
                   <Text fontSize={isLargerThan1300? '25px' : '20px'} fontWeight={'600'}>
@@ -691,9 +694,10 @@ Elevate your language skills with Tulex&apos;s Themed Writing Challenges. From G
                     p='20px'
                   >
                     <Image
-                      src='/pictures/planning.png'
-                      alt='Speaker'
-                      width={'200px'}
+                      src='/pictures/planning.webp'
+                      alt='Prep'
+                      width={'80px'}
+                      height={'60px'}
                     />
                   </Center>
                   <Text fontSize={isLargerThan1300? '25px' : '20px'} fontWeight={'600'} >
@@ -724,9 +728,10 @@ Elevate your language skills with Tulex&apos;s Themed Writing Challenges. From G
                     p='15px'
                   >
                     <Image
-                      src='/pictures/conversation.png'
+                      src='/pictures/conversation.webp'
                       alt='Speaker'
-                      width={'200px'}
+                      width={'80px'}
+                      height={'60px'}
                     />
                   </Center>
                   <Text fontSize={isLargerThan1300? '25px' : '20px'} fontWeight={'600'}>
@@ -782,9 +787,10 @@ Elevate your language skills with Tulex&apos;s Themed Writing Challenges. From G
                 <VStack align={'flex-start'} px={'20px'}>
                 <HStack mt='30px' >
                   <Image
-                    src='/pictures/double-check.png'
+                    src='/pictures/double-check.webp'
                     alt='Check'
                     width={'30px'}
+                    height={'30px'}
                     objectFit={'cover'}
                   />
                   <Text fontSize={'18px'}>
@@ -793,8 +799,9 @@ Elevate your language skills with Tulex&apos;s Themed Writing Challenges. From G
                 </HStack>
                 <HStack>
                   <Image
-                    src='/pictures/double-check.png'
+                    src='/pictures/double-check.webp'
                     alt='Check'
+                    height={'30px'}
                     width={'30px'}
                     objectFit={'cover'}
                   />
@@ -804,8 +811,9 @@ Elevate your language skills with Tulex&apos;s Themed Writing Challenges. From G
                 </HStack>
                 <HStack>
                   <Image
-                    src='/pictures/double-check.png'
+                    src='/pictures/double-check.webp'
                     alt='Check'
+                    height={'30px'}
                     width={'30px'}
                     objectFit={'cover'}
                   />
@@ -815,9 +823,10 @@ Elevate your language skills with Tulex&apos;s Themed Writing Challenges. From G
                 </HStack>
                 <HStack>
                   <Image
-                    src='/pictures/double-check.png'
+                    src='/pictures/double-check.webp'
                     alt='Check'
                     width={'30px'}
+                    height={'30px'}
                     objectFit={'cover'}
                   />
                   <Text fontSize={'18px'}>

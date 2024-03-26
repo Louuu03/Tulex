@@ -54,7 +54,7 @@ const CategryCard: React.FC<CardProps> = ({
         align={'flex-start'}
       >
         <Image
-          src={isEmpty(img) ? '/pictures/category.jpg' : img}
+          src={isEmpty(img) ? '/pictures/category.webp' : img}
           alt={`Image for ${title}`}
           w={'100px'}
           h={'100%'}
