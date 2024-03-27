@@ -16,10 +16,6 @@ interface DbConnection {
 let dbConnection: DbConnection | null = null;
 
 const connectToDatabase = async (): Promise<DbConnection> => {
-  console.log("MongoDB Connection String:", process.env.MONGODB_URI, process.env.DB_NAME); // Adjust the variable name as needed
-  console.log("MongoDB Connection uri:", uri); // Adjust the variable name as needed
-  console.log("MongoDB Connection dbname:", dbName); // Adjust the variable name as needed
-
   if (dbConnection) {
     return dbConnection;
   }
@@ -28,7 +24,6 @@ const connectToDatabase = async (): Promise<DbConnection> => {
     await client.connect();
     const db: Db = client.db(dbName);
     dbConnection = { db, client };
-    console.log('Successfully connected to the database');
     return dbConnection;
   } catch (error) {
     console.error('Could not connect to the database:', error);
