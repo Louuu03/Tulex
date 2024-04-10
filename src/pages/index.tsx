@@ -18,6 +18,7 @@ import { Splide, SplideSlide } from '@splidejs/react-splide';
 import '@splidejs/splide/dist/css/splide.min.css';
 import { IoMenu, IoClose } from 'react-icons/io5';
 import { useRouter } from 'next/router';
+import FullPageLoader from '@/components/layout/fullloader';
 
 const Navbar = () => {
   const [isLargerThan768] = useMediaQuery('(min-width: 768px)');
@@ -148,6 +149,7 @@ const LandingPage: React.FC = () => {
   //for Ipad or smaller llandscape screen
   const [isLargerThan930] = useMediaQuery('(min-width: 930px)');
   const [isLargerThan1300] = useMediaQuery('(min-width: 1300px)');
+  const [isLoading, setIsLoading] = useState(true);
   // for phone
   const [isLargerThan768] = useMediaQuery('(min-width: 768px)');
   const [scrollY, setScrollY] = useState(0);
@@ -177,15 +179,20 @@ const LandingPage: React.FC = () => {
   }, [scrollY, set]);
 
   useEffect(() => {
+    setTimeout(() => {
+      setIsLoading(false);
+    }, 300);
     window.addEventListener('scroll', handleScroll);
 
     return () => {
       window.removeEventListener('scroll', handleScroll);
     };
   }, []);
+  console.log(isLoading);
 
   return (
     <Box className='LandingPage-container' color={'#313e58'} fontWeight={'500'}>
+      {isLoading&&<FullPageLoader variant='solid'/>}
       {show && <Navbar />}
       <Box minH='200vh' bg='#FFFCF3'>
         <Box
