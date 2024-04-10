@@ -1,7 +1,12 @@
 import React from 'react';
 import { Spinner, Flex } from '@chakra-ui/react';
 
-const FullPageLoader = () => {
+interface LoaderProps{
+  variant?: 'solid'| 'transparent';
+}
+
+const FullPageLoader: React.FC<LoaderProps> = ({variant='transparent'}) => {
+  const loaderColor = variant === 'solid' ? 'white' : 'rgba(255, 255, 255, 0.7)';
   return (
     <Flex
       position='fixed' // Use "absolute" if you prefer
@@ -11,7 +16,7 @@ const FullPageLoader = () => {
       bottom='0'
       justifyContent='center'
       alignItems='center'
-      backgroundColor='rgba(255, 255, 255, 0.7)' // Semi-transparent background
+      backgroundColor={loaderColor} // Semi-transparent background
       zIndex='9999' // Ensure it covers other content
     >
       <Spinner
