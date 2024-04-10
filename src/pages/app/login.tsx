@@ -38,6 +38,7 @@ import {
 import { useRouter } from 'next/router';
 import jwt from 'jsonwebtoken';
 import axios from 'axios';
+import FullPageLoader from '@/components/layout/fullloader';
 
 const LoginPage: React.FC = () => {
   const [showPassword, setShowPassword] = useState<boolean>(false);
@@ -47,7 +48,7 @@ const LoginPage: React.FC = () => {
     email: string;
     password: string;
   }>({ email: '', password: '' });
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean|string>(false);
   const [isVerifing, setIsVerifing] = useState<boolean>(false);
   const [verifyCode, setVerifyCode] = useState<string>('');
   const [canResend, setCanResend] = useState<boolean | number>(true);
@@ -62,9 +63,10 @@ const LoginPage: React.FC = () => {
   const handleLogin = async (type?: string, data?: any) => {
     const emailData = type == 'guest' ? data?.email : email;
     const passwordData = type == 'guest' ? data?.password : password;
+
     if (!(isEmpty(email) && isEmpty(password)) || type == 'guest') {
       //Lock the login button
-      setIsLoading(true);
+      setIsLoading(type==='login'?'login':type==='guest'?'thirdparty':true);
 
       //Login the user
       await loginUser(emailData, passwordData)
@@ -122,7 +124,7 @@ const LoginPage: React.FC = () => {
   };
   const handleSignUp = async () => {
     if (!(isEmpty(email) && isEmpty(password))) {
-      setIsLoading(true);
+      setIsLoading('signup');
       await signUpUser(email, password)
         .then(response => {
           setIsLoading(false);
@@ -201,11 +203,11 @@ const LoginPage: React.FC = () => {
   };
 
   const handleFacebookLogin = () => {
-    setIsLoading(true);
+    setIsLoading('thirdparty');
     FacebookLogin();
   };
   const handleGoogleLogin = () => {
-    setIsLoading(true);
+    setIsLoading('thirdparty');
     GoogleLogin();
   };
 
@@ -253,6 +255,7 @@ const LoginPage: React.FC = () => {
     <VStack align='center' className='login-container'>
       {/* <Image src="/tulex-logo.svg" alt="Tulex" width={150} height={150} /> */}
       <HStack>
+        {isLoading==='thirdparty'&&<FullPageLoader/>}
         <VStack minW={'300px'}>
           <Heading as='h1' size='xl' textAlign='center'>
             Tulex
@@ -302,8 +305,9 @@ const LoginPage: React.FC = () => {
           </Box>
           <Button
             className='loginBtn'
-            onClick={() => handleLogin()}
-            isDisabled={!!isInvalid.email || !!isInvalid.password || isLoading}
+            onClick={() => {handleLogin('login');}}
+            isDisabled={!!isInvalid.email || !!isInvalid.password || !!isLoading}
+            isLoading={isLoading==='login'}
           >
             Login
           </Button>
@@ -311,7 +315,8 @@ const LoginPage: React.FC = () => {
             variant='outline'
             size='sm'
             onClick={handleSignUp}
-            isDisabled={!!isInvalid.email || !!isInvalid.password || isLoading}
+            isDisabled={!!isInvalid.email || !!isInvalid.password || !!isLoading}
+            isLoading={isLoading==='signup'}
           >
             Sign up
           </Button>
@@ -330,8 +335,8 @@ const LoginPage: React.FC = () => {
           </Link>
           {!isLargerThan768 && (
             <VStack minW={'300px'} padding={'20px'}>
-              <FacebookLoginButton size='40px' onClick={handleFacebookLogin} />
-              <GoogleLoginButton size='40px' onClick={handleGoogleLogin} />
+              <FacebookLoginButton size='40px' disabled={!!isLoading} onClick={handleFacebookLogin} />
+              <GoogleLoginButton size='40px' disabled={!!isLoading} onClick={handleGoogleLogin} />
             </VStack>
           )}
         </VStack>
@@ -344,8 +349,8 @@ const LoginPage: React.FC = () => {
         )}
         {isLargerThan768 && (
           <VStack minW={'300px'} padding={'20px'}>
-            <FacebookLoginButton size='40px' onClick={handleFacebookLogin} />
-            <GoogleLoginButton size='40px' onClick={handleGoogleLogin} />
+            <FacebookLoginButton size='40px'  disabled={!!isLoading} onClick={handleFacebookLogin} />
+            <GoogleLoginButton size='40px'  disabled={!!isLoading} onClick={handleGoogleLogin} />
           </VStack>
         )}
       </HStack>
@@ -368,7 +373,7 @@ const LoginPage: React.FC = () => {
           <ModalFooter>
             <Button
               variant='ghost'
-              isDisabled={isLoading || !canResend || isNumber(canResend)}
+              isDisabled={!!isLoading || !canResend || isNumber(canResend)}
               mr={3}
               onClick={() => {
                 handleResend();
@@ -386,7 +391,7 @@ const LoginPage: React.FC = () => {
             </Button>
             <Button
               colorScheme='blue'
-              isDisabled={isLoading}
+              isLoading={!!isLoading}
               mr={3}
               onClick={() => handleVerify()}
             >
@@ -394,7 +399,7 @@ const LoginPage: React.FC = () => {
             </Button>
             <Button
               variant='ghost'
-              isDisabled={isLoading}
+              isDisabled={!!isLoading}
               onClick={() => setIsVerifing(false)}
             >
               Cancel
